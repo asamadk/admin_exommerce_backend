@@ -1,0 +1,5 @@
+export const DASHBOARD = 'Dashboard'
+export const USER = 'User'
+export const ORDERS = 'Orders'
+export const ADD = 'Add'
+export const LOGIN = 'Login'
