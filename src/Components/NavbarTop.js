@@ -99,6 +99,7 @@ export default function NavbarTop() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [pageRef, setPageRef] = React.useState(Constants.DASHBOARD);
+  const [navbarText, setNavbarText] = React.useState('Admin Dashboard');
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -130,7 +131,7 @@ export default function NavbarTop() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Admin Dashboard
+            {navbarText}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -147,7 +148,11 @@ export default function NavbarTop() {
         <Divider />
         <List>
           {Data.NAVIGATION_DATA.map((text) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }} onClick={() => {setPageRef(text)}} >
+            <ListItem key={text} disablePadding sx={{ display: "block" }} onClick={() => {
+              setPageRef(text);
+              setNavbarText(text
+                );
+            }} >
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -178,11 +183,21 @@ export default function NavbarTop() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         { pageRef === Constants.DASHBOARD &&  <Body/>}
-        { pageRef === Constants.USER &&  <User/> }
+        { pageRef === Constants.USER && 
+          <div style={bodyContainer}>
+            <User/>
+          </div>
+        }
         { pageRef === Constants.ORDERS &&  <Orders />}
         { pageRef === Constants.ADD &&  <AddData />}
         { pageRef === Constants.LOGIN &&  <Login/>}
       </Box>
     </Box>
   );
+}
+
+const bodyContainer = {
+  height : '500px',
+  position : 'relative',
+  right : '5%'
 }
