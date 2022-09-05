@@ -188,9 +188,21 @@ export default function NavbarTop() {
             <User/>
           </div>
         }
-        { pageRef === Constants.ORDERS &&  <Orders />}
-        { pageRef === Constants.ADD &&  <AddData />}
-        { pageRef === Constants.LOGIN &&  <Login/>}
+        { pageRef === Constants.ORDERS &&  
+            <div style={bodyContainer}>
+                <Orders />
+            </div>
+        }
+        { pageRef === Constants.ADD &&  
+            <div style={bodyContainer}>
+                <AddData />
+            </div>
+        }
+        { pageRef === Constants.LOGIN &&  
+            <div style={bodyContainer}>
+                <Login/>
+            </div>
+        }
       </Box>
     </Box>
   );
