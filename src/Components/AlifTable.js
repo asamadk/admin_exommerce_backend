@@ -41,6 +41,7 @@ export default function AlifTable(props) {
                 {source === "user" && (
                   <LoadingButton
                     size="small"
+                    sx={{backgroundColor : '#673ab7'}}
                     loadingPosition="start"
                     startIcon={<LockIcon />}
                     variant="contained"

@@ -40,9 +40,9 @@ const drawerWidth = 240;
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    // mode: 'dark',
     primary: {
-      main: '#1976d2',
+      main: '#673ab7',
     },
   },
 });
