@@ -26,8 +26,15 @@ import * as Constants from "../Helper/Constants";
 import Body from "../Pages/Body";
 import User from "../Pages/User";
 import Orders from "../Pages/Orders";
+import Coupon from "../Pages/Coupon";
+import Category from "../Pages/Category";
+import Product from "../Pages/Product";
 import AddData from "../Pages/AddData";
 import Login from "../Pages/Login";
+import RedeemIcon from '@mui/icons-material/Redeem';
+import CategoryIcon from '@mui/icons-material/Category';
+import CheckroomIcon from '@mui/icons-material/Checkroom';
+// import { Category } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -170,6 +177,9 @@ export default function NavbarTop() {
                   {text === Constants.DASHBOARD && <DashboardIcon />}
                   {text === Constants.USER && <AccountCircleIcon />}
                   {text === Constants.ORDERS && <PaidIcon />}
+                  {text === Constants.COUPON && <RedeemIcon />}
+                  {text === Constants.CATEGORY && <CategoryIcon />}
+                  {text === Constants.PRODUCT && <CheckroomIcon />}
                   {text === Constants.ADD && <AddCircleIcon />}
                   {text === Constants.LOGIN && <LoginIcon />}
                 </ListItemIcon>
@@ -179,7 +189,7 @@ export default function NavbarTop() {
           ))}
         </List>
       </Drawer>
-      Body entry point
+      {/* Body entry point */}
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         { pageRef === Constants.DASHBOARD &&  <Body/>}
@@ -188,21 +198,12 @@ export default function NavbarTop() {
             <User/>
           </div>
         }
-        { pageRef === Constants.ORDERS &&  
-            <div style={bodyContainer}>
-                <Orders />
-            </div>
-        }
-        { pageRef === Constants.ADD &&  
-            <div style={bodyContainer}>
-                <AddData />
-            </div>
-        }
-        { pageRef === Constants.LOGIN &&  
-            <div style={bodyContainer}>
-                <Login/>
-            </div>
-        }
+        { pageRef === Constants.ORDERS &&  <Orders />}
+        { pageRef === Constants.COUPON &&  <Coupon/>}
+        { pageRef === Constants.CATEGORY &&  <Category/>}
+        { pageRef === Constants.PRODUCT &&  <Product/>}
+        { pageRef === Constants.ADD &&  <AddData />}
+        { pageRef === Constants.LOGIN &&  <Login/>}
       </Box>
     </Box>
   );
