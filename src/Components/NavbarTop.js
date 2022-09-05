@@ -34,9 +34,18 @@ import Login from "../Pages/Login";
 import RedeemIcon from '@mui/icons-material/Redeem';
 import CategoryIcon from '@mui/icons-material/Category';
 import CheckroomIcon from '@mui/icons-material/Checkroom';
-// import { Category } from "@mui/icons-material";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const drawerWidth = 240;
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#1976d2',
+    },
+  },
+});
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -123,6 +132,7 @@ export default function NavbarTop() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
+      <ThemeProvider theme={darkTheme}>
       <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
@@ -142,6 +152,7 @@ export default function NavbarTop() {
           </Typography>
         </Toolbar>
       </AppBar>
+      </ThemeProvider>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>

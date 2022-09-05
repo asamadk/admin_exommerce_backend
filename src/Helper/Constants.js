@@ -6,3 +6,5 @@ export const CATEGORY = 'Category'
 export const PRODUCT = 'Product'
 export const ADD = 'Add'
 export const LOGIN = 'Login'
+
+export const ADD_PRODUCTS = 'Products'
