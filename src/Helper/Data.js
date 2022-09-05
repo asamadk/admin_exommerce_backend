@@ -1,3 +1,3 @@
 export const NAVIGATION_DATA = [
-    'Dashboard','User','Orders','Add','Login'
+    'Dashboard','User','Orders', 'Coupon', 'Category', 'Product', 'Add','Login'
 ]
