@@ -15,6 +15,9 @@ import Typography from "@mui/material/Typography";
 import AddProductModel from "../Components/AddProductModel";
 import AddCouponModel from "../Components/AddCouponModel";
 import AddOrderModel from "../Components/AddOrdersModel";
+import AddBannerModel from "../Components/AddBannerModel";
+import AddSizeOptionModel from "../Components/AddSizeOptionModel";
+import AddCategoriesModel from "../Components/AddCategoriesModel";
 
 
 let addItems = [
@@ -30,6 +33,9 @@ export default function AddData() {
   const [productModal, setProductModal] = useState(false);
   const [couponModal, setCouponModal] = useState(false)
   const [orderModal, setOrderModal] = useState(false)
+  const [bannerModal, setBannerModal] = useState(false)
+  const [sizeOptionModal, setSizeOptionModal] = useState(false)
+  const [categoriesModal, setCategoriesModal] = useState(false)
 
   const handleAddContainer = (text) => {
     console.log(text);
@@ -38,8 +44,15 @@ export default function AddData() {
     }else if(text === Constants.ADD_COUPONS) {
       setCouponModal(true);
     }else if(text === Constants.ADD_ORDERS) {
-      console.log('aa raha hai')
+      // console.log('aa raha hai')
       setOrderModal(true);
+    }else if(text === Constants.ADD_BANNER) {
+      setBannerModal(true);
+      console.log('aa raha hai')
+    }else if(text === Constants.ADD_SIZE_OPTION) {
+      setSizeOptionModal(true);
+    }else if(text === Constants.ADD_CATEGORIES) {
+      setCategoriesModal(true);
     }
   };
 
@@ -53,6 +66,18 @@ export default function AddData() {
 
   const handleOrderModalClose = () => {
     setOrderModal(false);
+  }
+
+  const handleBannerModalClose = () => {
+    setBannerModal(false);
+  }
+
+  const handleSizeOptionModalClose = () => {
+    setSizeOptionModal(false);
+  }
+
+  const handleCategoriesModalClose = () => {
+    setCategoriesModal(false);
   }
 
   return (
@@ -91,6 +116,9 @@ export default function AddData() {
         {productModal && <AddProductModel parentCallback={handleProductModalClose} />}
         {couponModal && <AddCouponModel parentCallback={handleCouponModalClose} />}
         {orderModal && <AddOrderModel parentCallback={handleOrderModalClose} />}
+        {bannerModal && <AddBannerModel parentCallback={handleBannerModalClose} />}
+        {sizeOptionModal && <AddSizeOptionModel parentCallback={handleSizeOptionModalClose} />}
+        {categoriesModal && <AddCategoriesModel parentCallback={handleCategoriesModalClose} />}
       </Box>
     </>
   );
