@@ -41,7 +41,7 @@ const darkTheme = createTheme({
     },
   });
 
-export default function AddProductModel(props) {
+export default function AddOrderModel(props) {
   const handleClose = () => {
     props.parentCallback();
   };
@@ -56,7 +56,7 @@ export default function AddProductModel(props) {
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Add Products
+              Add Orders
             </Typography>
             <IconButton
               size="large"

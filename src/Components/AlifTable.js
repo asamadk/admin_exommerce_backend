@@ -10,6 +10,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Switch from "@mui/material/Switch";
 import Paper from "@mui/material/Paper";
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+
 
 export default function AlifTable(props) {
   const [rows, setRows] = useState(props?.rows);
@@ -41,12 +44,16 @@ export default function AlifTable(props) {
                 {source === "user" && (
                   <LoadingButton
                     size="small"
+                    sx={{backgroundColor : '#673ab7'}}
                     loadingPosition="start"
                     startIcon={<LockIcon />}
                     variant="contained"
                   >
                     Change password
                   </LoadingButton>
+                )}
+                {source === "order" && (
+                  <Button variant="outlined" startIcon={<AddIcon />}>View More</Button> 
                 )}
               </TableCell>
               <TableCell>

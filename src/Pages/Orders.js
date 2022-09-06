@@ -1,35 +1,77 @@
 import React from 'react'
 import AlifTable from "../Components/AlifTable";
+import AddIcon from '@mui/icons-material/Add';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
-function createData(name, city, isActive, state, id) {
-  return { name, city, isActive, state, id };
+function createData(id, name, categoryImageUrl, edit, del) {
+  return { id, name, categoryImageUrl, edit, del };
 }
 
-const rows = [
-  createData("Abdul Samad Kirmani", "Banda", true, "Uttar Pradesh", 1),
-  createData("Abdul Samad Kirmani", "Banda", true, "Uttar Pradesh", 2),
-  createData("Abdul Samad Kirmani", "Banda", true, "Uttar Pradesh", 3),
-  createData("Abdul Samad Kirmani", "Banda", true, "Uttar Pradesh", 4),
-  createData("Abdul Samad Kirmani", "Banda", true, "Uttar Pradesh", 5),
-  createData("Abdul Samad Kirmani", "Banda", true, "Uttar Pradesh", 6),
-  createData("Abdul Samad Kirmani", "Banda", true, "Uttar Pradesh", 7),
-  createData("Abdul Samad Kirmani", "Banda", true, "Uttar Pradesh", 8),
-  createData("Abdul Samad Kirmani", "Banda", true, "Uttar Pradesh", 9),
-  createData("Abdul Samad Kirmani", "Banda", true, "Uttar Pradesh", 10),
-];
-
 const column = [
-  'OrderId', 'UserName', 'UserEmail', 'Products', 'Order Date', 'City', 'State','Delivery Date', 'Paid', 'Delivery status'
+  'Id', 'Name', 'categoryImageUrl', 'Edit', 'Delete'
 ]
+
+const rows = [
+  createData(1, "Hiba Fatima Kirmani", "URL", 1, 0),
+  createData(2, "Hiba Fatima Kirmani", "URL", 1, 0),
+  createData(3, "Hiba Fatima Kirmani", "URL", 1, 0),
+  createData(4, "Hiba Fatima Kirmani", "URL", 1, 0),
+  createData(5, "Hiba Fatima Kirmani", "URL", 1, 0),
+  createData(6, "Hiba Fatima Kirmani", "URL", 1, 0),
+  createData(7, "Hiba Fatima Kirmani", "URL", 1, 0),
+  createData(8, "Hiba Fatima Kirmani", "URL", 1, 0),
+  createData(9, "Hiba Fatima Kirmani", "URL", 1, 0),
+  createData(10, "Hiba Fatima Kirmani", "URL", 1, 0),
+];
 
 export default function Orders() {
   return (
     <>
-    <AlifTable
-      source={'order'}
-      rows={rows}
-      col={column}
-    />
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {column?.map((col) => (
+                <TableCell key={col}>{col}</TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows?.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell component="th" scope="row">
+                  {row.name}
+                </TableCell>
+                {/* <TableCell>{row.discount}</TableCell>
+                <TableCell>{row.maxDiscount}</TableCell>
+                <TableCell>{row.expiryDate.toString()}</TableCell> */}
+                <TableCell>{row.categoryImageUrl.toString()}</TableCell>
+                <TableCell>
+                  <Button variant="outlined" startIcon={<EditIcon />}>
+                    Edit
+                  </Button>
+                </TableCell>
+                <TableCell><Button variant="outlined" startIcon={<DeleteIcon />}>
+                  Delete
+                </Button></TableCell>
+                <TableCell>
+                </TableCell>
+                <TableCell>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
   </>
   )
 }

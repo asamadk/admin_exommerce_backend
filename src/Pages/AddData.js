@@ -1,22 +1,21 @@
 import React, { useState } from "react";
 import * as Constants from "../Helper/Constants";
-import * as Data from '../Helper/Data'
+// import * as Data from '../Helper/Data'
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
 
 import { experimentalStyled as styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import AddBoxIcon from "@mui/icons-material/AddBox";
+// import AddBoxIcon from "@mui/icons-material/AddBox";
 import AddProductModel from "../Components/AddProductModel";
+import AddCouponModel from "../Components/AddCouponModel";
+import AddOrderModel from "../Components/AddOrdersModel";
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
 
 let addItems = [
   "Products",
@@ -29,16 +28,31 @@ let addItems = [
 
 export default function AddData() {
   const [productModal, setProductModal] = useState(false);
+  const [couponModal, setCouponModal] = useState(false)
+  const [orderModal, setOrderModal] = useState(false)
 
   const handleAddContainer = (text) => {
     console.log(text);
     if (text === Constants.ADD_PRODUCTS) {
       setProductModal(true);
+    }else if(text === Constants.ADD_COUPONS) {
+      setCouponModal(true);
+    }else if(text === Constants.ADD_ORDERS) {
+      console.log('aa raha hai')
+      setOrderModal(true);
     }
   };
 
   const handleProductModalClose = () => {
     setProductModal(false);
+  }
+
+  const handleCouponModalClose = () => {
+    setCouponModal(false);
+  }
+
+  const handleOrderModalClose = () => {
+    setOrderModal(false);
   }
 
   return (
@@ -51,38 +65,32 @@ export default function AddData() {
         >
           {addItems.map((text, index) => (
             <Grid
-              onClick={() => handleAddContainer(text)}
               item
               xs={2}
               sm={4}
               md={4}
               key={index}
             >
-              <Item
-                sx={{
-                  minWidth: 275,
-                  maxWidth: 512,
-                  // "#673ab7"
-                  backgroundColor: Data.COLORS[Math.floor(Math.random() * (6 - 0 + 1) + 0 )],
-                  height: 184,
-                  borderRadius: 4,
-                  paddingTop: 8,
-                  cursor: "pointer",
-                }}
-              >
-                <Typography
-                  sx={{ color: "#E3F2FD" }}
-                  variant="h4"
-                  component="h2"
-                >
-                  {text}
-                </Typography>
-                <AddBoxIcon style={{ color: "#E3F2FD", margin: 20 }} />
-              </Item>
+              <Box sx={{ minWidth: 275 }}>
+                <Card variant="outlined">
+                  <React.Fragment>
+                    <CardContent>
+                      <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
+                        {text}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button onClick={() => handleAddContainer(text)} variant="outlined">ADD</Button>
+                    </CardActions>
+                  </React.Fragment>
+                </Card>
+              </Box>
             </Grid>
           ))}
         </Grid>
-        { productModal && <AddProductModel parentCallback={handleProductModalClose} /> }
+        {productModal && <AddProductModel parentCallback={handleProductModalClose} />}
+        {couponModal && <AddCouponModel parentCallback={handleCouponModalClose} />}
+        {orderModal && <AddOrderModel parentCallback={handleOrderModalClose} />}
       </Box>
     </>
   );
