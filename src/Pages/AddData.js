@@ -80,7 +80,7 @@ export default function AddData() {
                       </Typography>
                     </CardContent>
                     <CardActions>
-                      <Button onClick={() => handleAddContainer(text)} variant="outlined">ADD</Button>
+                      <Button onClick={() => handleAddContainer(text)} variant="contained" sx={saveButton} >ADD</Button>
                     </CardActions>
                   </React.Fragment>
                 </Card>
@@ -94,4 +94,9 @@ export default function AddData() {
       </Box>
     </>
   );
+}
+
+const saveButton = {
+  backgroundColor : '#673ab7',
+  color : '#ffffff'
 }
