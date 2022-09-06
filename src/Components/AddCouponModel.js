@@ -6,10 +6,16 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from "@mui/icons-material/Close";
 
 import Typography from "@mui/material/Typography";
 
+const saveButton = {
+  marginTop : '15px',
+  backgroundColor : '#673ab7'
+}
 
 const style = {
     position: "absolute",
@@ -41,6 +47,10 @@ const style = {
         },
       },
     });
+
+    const addCouponsMain = {
+      marginTop : '30px'
+    }
   
   export default function AddCouponModel(props) {
     const handleClose = () => {
@@ -54,7 +64,7 @@ const style = {
       >
         <Box sx={style}>
         <ThemeProvider theme={darkTheme}>
-          <AppBar position="static">
+          <AppBar position="fixed">
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 Add Coupons
@@ -72,12 +82,18 @@ const style = {
             </Toolbar>
           </AppBar>
           </ThemeProvider>
-          <Box >
-              <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Name" variant="outlined" />
-              <TextField sx={inputStyle2} id="outlined-basic" label="Real Price" variant="outlined" />
-              <TextField sx={inputStyle2} id="outlined-basic" label="Price" variant="outlined" />
-              <TextField sx={inputStyle2} id="outlined-basic" label="Weight" variant="outlined" />
+          <Box sx={addCouponsMain} >
+              <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Coupon Name" variant="outlined" />
+              <Box>
+                <TextField sx={inputStyle2} id="outlined-basic" label="Discount Percentage" variant="outlined" />
+                <TextField sx={inputStyle2} id="outlined-basic" label="Max Discount" variant="outlined" />
+                <TextField sx={inputStyle2} id="outlined-basic" label="Minimum purchase price" variant="outlined" />
+                <TextField sx={inputStyle2} id="outlined-basic" type={'date'} variant="outlined" />
+              </Box>
           </Box>
+          <Button sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
+          Save
+        </Button>
         </Box>
       </Modal>
     );

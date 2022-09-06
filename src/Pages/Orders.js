@@ -1,35 +1,127 @@
-import React from 'react'
-import AlifTable from "../Components/AlifTable";
-import AddIcon from '@mui/icons-material/Add';
+import React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import Chip from "@mui/material/Chip";
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-function createData(id, name, categoryImageUrl, edit, del) {
-  return { id, name, categoryImageUrl, edit, del };
+function createData(
+  id,
+  Username,
+  couponName,
+  orderDate,
+  ArrivalDate,
+  Source,
+  Status,
+  mode,
+  total,
+  paid
+) {
+  return {
+    id,
+    Username,
+    couponName,
+    orderDate,
+    ArrivalDate,
+    Source,
+    Status,
+    mode,
+    total,
+    paid,
+  };
 }
 
 const column = [
-  'Id', 'Name', 'categoryImageUrl', 'Edit', 'Delete'
-]
+  "Id",
+  "Username",
+  "Order Coupon Name",
+  "Ordere Date",
+  "Arrival Date",
+  "Source",
+  "Status",
+  "Payment Mode",
+  "Total",
+  "Paid",
+  "More",
+];
 
 const rows = [
-  createData(1, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(2, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(3, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(4, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(5, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(6, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(7, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(8, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(9, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(10, "Hiba Fatima Kirmani", "URL", 1, 0),
+  createData(
+    1,
+    "Hiba Fatima Kirmani",
+    "FIRST15",
+    "12/12/22",
+    "15/12/22",
+    "Outside",
+    "Placed",
+    "COD",
+    "1599",
+    false
+  ),
+  createData(
+    2,
+    "Hiba Fatima Kirmani",
+    "FIRST15",
+    "12/12/22",
+    "15/12/22",
+    "Outside",
+    "Placed",
+    "COD",
+    "1599",
+    true
+  ),
+  createData(
+    3,
+    "Hiba Fatima Kirmani",
+    "FIRST15",
+    "12/12/22",
+    "15/12/22",
+    "Outside",
+    "Placed",
+    "COD",
+    "1599",
+    true
+  ),
+  createData(
+    4,
+    "Hiba Fatima Kirmani",
+    "FIRST15",
+    "12/12/22",
+    "15/12/22",
+    "Outside",
+    "Placed",
+    "COD",
+    "1599",
+    true
+  ),
+  createData(
+    5,
+    "Hiba Fatima Kirmani",
+    "FIRST15",
+    "12/12/22",
+    "15/12/22",
+    "Outside",
+    "Placed",
+    "COD",
+    "1599",
+    false
+  ),
+  createData(
+    6,
+    "Hiba Fatima Kirmani",
+    "FIRST15",
+    "12/12/22",
+    "15/12/22",
+    "Outside",
+    "Placed",
+    "COD",
+    "1599",
+    true
+  ),
 ];
 
 export default function Orders() {
@@ -49,29 +141,32 @@ export default function Orders() {
               <TableRow key={row.id}>
                 <TableCell>{row.id}</TableCell>
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {row.Username}
                 </TableCell>
-                {/* <TableCell>{row.discount}</TableCell>
-                <TableCell>{row.maxDiscount}</TableCell>
-                <TableCell>{row.expiryDate.toString()}</TableCell> */}
-                <TableCell>{row.categoryImageUrl.toString()}</TableCell>
+                <TableCell>{row.couponName}</TableCell>
+                <TableCell>{row.orderDate}</TableCell>
+                <TableCell>{row.ArrivalDate}</TableCell>
+                <TableCell>{row.Source}</TableCell>
+                <TableCell>{row.Status}</TableCell>
+                <TableCell>{row.mode}</TableCell>
+                <TableCell>{row.total}</TableCell>
                 <TableCell>
-                  <Button variant="outlined" startIcon={<EditIcon />}>
-                    Edit
-                  </Button>
+                  {row.paid === true ? (
+                    <Chip size="small" label="paid" color="success" />
+                  ) : (
+                    <Chip size="small" label="unpaid" color="error" />
+                  )}
                 </TableCell>
-                <TableCell><Button variant="outlined" startIcon={<DeleteIcon />}>
-                  Delete
-                </Button></TableCell>
                 <TableCell>
-                </TableCell>
-                <TableCell>
+                  <IconButton aria-label="fingerprint" color="secondary">
+                    <MoreVertIcon />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-  </>
-  )
+    </>
+  );
 }

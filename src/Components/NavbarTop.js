@@ -185,7 +185,7 @@ export default function NavbarTop() {
                     justifyContent: "center",
                   }}
                 >
-                  {text === Constants.DASHBOARD && <DashboardIcon />}
+                  {text === Constants.DASHBOARD && <DashboardIcon/>}
                   {text === Constants.USER && <AccountCircleIcon />}
                   {text === Constants.ORDERS && <PaidIcon />}
                   {text === Constants.COUPON && <RedeemIcon />}
