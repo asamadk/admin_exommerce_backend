@@ -8,3 +8,5 @@ export const ADD = 'Add'
 export const LOGIN = 'Login'
 
 export const ADD_PRODUCTS = 'Products'
+export const ADD_COUPONS = 'Coupons'
+export const ADD_ORDERS = 'Orders'
