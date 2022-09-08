@@ -7,6 +7,8 @@ import Toolbar from "@mui/material/Toolbar";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import CloseIcon from "@mui/icons-material/Close";
+import Button from '@mui/material/Button';
+import SaveIcon from '@mui/icons-material/Save';
 
 import Typography from "@mui/material/Typography";
 
@@ -23,6 +25,11 @@ const style = {
   p: 4,
 };
 
+const saveButton = {
+  marginTop : '15px',
+  backgroundColor : '#673ab7'
+}
+
 const inputStyle = {
     marginTop : '15px'
 }
@@ -30,6 +37,10 @@ const inputStyle = {
 const inputStyle2 = {
     marginTop : '15px',
     marginRight : '5px'
+}
+
+const bannerMainContainer = {
+  marginTop : '30px'
 }
 
 const darkTheme = createTheme({
@@ -53,7 +64,7 @@ export default function AddSizeOptionModel(props) {
     >
       <Box sx={style}>
       <ThemeProvider theme={darkTheme}>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Add Size Option
@@ -71,11 +82,11 @@ export default function AddSizeOptionModel(props) {
           </Toolbar>
         </AppBar>
         </ThemeProvider>
-        <Box >
+        <Box sx={bannerMainContainer} >
             <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Name" variant="outlined" />
-            <TextField sx={inputStyle2} id="outlined-basic" label="Real Price" variant="outlined" />
-            <TextField sx={inputStyle2} id="outlined-basic" label="Price" variant="outlined" />
-            <TextField sx={inputStyle2} id="outlined-basic" label="Weight" variant="outlined" />
+            <Button sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
+          Save
+        </Button>
         </Box>
       </Box>
     </Modal>
