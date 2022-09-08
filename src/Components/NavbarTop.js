@@ -35,6 +35,7 @@ import RedeemIcon from '@mui/icons-material/Redeem';
 import CategoryIcon from '@mui/icons-material/Category';
 import CheckroomIcon from '@mui/icons-material/Checkroom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -111,7 +112,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function NavbarTop() {
+function NavbarTop() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [pageRef, setPageRef] = React.useState(Constants.DASHBOARD);
@@ -168,8 +169,7 @@ export default function NavbarTop() {
           {Data.NAVIGATION_DATA.map((text) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }} onClick={() => {
               setPageRef(text);
-              setNavbarText(text
-                );
+              setNavbarText(text);
             }} >
               <ListItemButton
                 sx={{
@@ -192,7 +192,7 @@ export default function NavbarTop() {
                   {text === Constants.CATEGORY && <CategoryIcon />}
                   {text === Constants.PRODUCT && <CheckroomIcon />}
                   {text === Constants.ADD && <AddCircleIcon />}
-                  {text === Constants.LOGIN && <LoginIcon />}
+                  {text === Constants.LOGOUT && <LoginIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -204,21 +204,19 @@ export default function NavbarTop() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         { pageRef === Constants.DASHBOARD &&  <Body/>}
-        { pageRef === Constants.USER && 
-          <div style={bodyContainer}>
-            <User/>
-          </div>
-        }
+        { pageRef === Constants.USER && <User/>}
         { pageRef === Constants.ORDERS &&  <Orders />}
         { pageRef === Constants.COUPON &&  <Coupon/>}
         { pageRef === Constants.CATEGORY &&  <Category/>}
         { pageRef === Constants.PRODUCT &&  <Product/>}
         { pageRef === Constants.ADD &&  <AddData />}
-        { pageRef === Constants.LOGIN &&  <Login/>}
+        {/* { pageRef === Constants.LOGOUT &&  <Link to={'/login'}/>} */}
       </Box>
     </Box>
   );
 }
+
+export default NavbarTop
 
 const bodyContainer = {
   height : '500px',

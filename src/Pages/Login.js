@@ -35,9 +35,10 @@ export default function Login() {
 }
 
 const mainContainer = {
-   width: '50vh', 
+  margin : 10,
+  width: '50vh', 
   bgcolor: 'white', 
-  // height: '80vh', 
+  overflowY : 'hidden',
   borderRadius: 3, 
   textAlign: 'center' ,
   border : 'solid 1px rgba(35,31,32,.1)'
