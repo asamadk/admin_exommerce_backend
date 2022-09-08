@@ -61,10 +61,6 @@ export default function Category() {
                 <TableCell><Button variant="outlined" startIcon={<DeleteIcon />}>
                   Delete
                 </Button></TableCell>
-                <TableCell>
-                </TableCell>
-                <TableCell>
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>

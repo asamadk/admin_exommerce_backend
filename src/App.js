@@ -1,12 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
-import NavbarTop from './Components/NavbarTop';
+import logo from "./logo.svg";
+import "./App.css";
+import * as Constants from "./Helper/Constants";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import NavbarTop from "./Components/NavbarTop";
+import Login from "./Pages/Login";
 
 function App() {
   return (
-    <div>
-      <NavbarTop/>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/">
+          {/* <NavbarTop /> */}
+                    {localStorage.getItem(Constants.TOKEN) != null ? <NavbarTop /> : <Login/>}
+        </Route>
+        <Route path="/login">
+          <Login />
+        </Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
 

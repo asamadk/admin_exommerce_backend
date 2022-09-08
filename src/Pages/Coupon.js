@@ -56,10 +56,6 @@ export default function Coupon() {
                 <TableCell>{row.expiryDate.toString()}</TableCell>
                 <TableCell>{row.edit.toString()}</TableCell>
                 <TableCell>{row.del.toString()}</TableCell>
-                <TableCell>
-                </TableCell>
-                <TableCell>
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>

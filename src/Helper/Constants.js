@@ -6,6 +6,8 @@ export const CATEGORY = 'Category'
 export const PRODUCT = 'Product'
 export const ADD = 'Add'
 export const LOGIN = 'Login'
+export const TOKEN = 'token'
+export const LOGOUT = 'Logout'
 
 export const ADD_PRODUCTS = 'Products'
 export const ADD_COUPONS = 'Coupons'
