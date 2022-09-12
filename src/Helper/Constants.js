@@ -17,3 +17,7 @@ export const ADD_SIZE_OPTION = 'Size Option'
 export const ADD_CATEGORIES = 'Categories'
 
 export const OK = 200;
+
+export const isLoggedIn = () => {
+   return localStorage.getItem(TOKEN) != null &&  localStorage.getItem(TOKEN) != ''  
+}

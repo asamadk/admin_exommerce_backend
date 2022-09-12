@@ -12,9 +12,12 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { Public } from '@mui/icons-material';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 
 export default function Login() {
+
+  const history = useHistory()
 
   const [username,setusername] = useState('');
   const [password, setpassword] = useState('');
@@ -29,8 +32,6 @@ export default function Login() {
     setpassword(event.target.value);
   }
 
-  
-
   const usernameAndPassword = async () => {
     const data = {
       'username' : username,
@@ -41,11 +42,25 @@ export default function Login() {
       console.log(`Error in ${err}`);
     });
 
-    if(loginRes.status != Constants.OK ){
+    if(loginRes?.status != Constants.OK ){
       //error show
+      showLoginError();
       return;
     }
-    console.log(loginRes);
+    
+    if(loginRes?.data?.responseWrapper[0] == null){
+      showLoginError()
+    }else{
+      const token = loginRes?.data?.responseWrapper[0]
+      console.log(token);
+      localStorage.setItem(Constants.TOKEN,token)
+      history.push('/home')
+    }
+  }
+
+
+  const showLoginError = () => {
+    console.log('Error in login')
   }
 
   return (

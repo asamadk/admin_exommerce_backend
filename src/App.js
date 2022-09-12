@@ -10,8 +10,10 @@ function App() {
     <BrowserRouter>
       <Switch>
         <Route exact path="/">
+          {localStorage.getItem(Constants.TOKEN) != null ? <NavbarTop /> : <Login/>}
+        </Route>
+        <Route path="/home">
           <NavbarTop />
-                    {/* {localStorage.getItem(Constants.TOKEN) != null ? <NavbarTop /> : <Login/>} */}
         </Route>
         <Route path="/login">
           <Login />

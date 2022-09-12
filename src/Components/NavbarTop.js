@@ -35,9 +35,11 @@ import RedeemIcon from '@mui/icons-material/Redeem';
 import CategoryIcon from '@mui/icons-material/Category';
 import CheckroomIcon from '@mui/icons-material/Checkroom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useEffect } from "react";
 
 const drawerWidth = 240;
+
 
 const darkTheme = createTheme({
   palette: {
@@ -113,10 +115,19 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 function NavbarTop() {
+  const history = useHistory()
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [pageRef, setPageRef] = React.useState(Constants.DASHBOARD);
   const [navbarText, setNavbarText] = React.useState('Admin Dashboard');
+
+  useEffect(() => {
+    if(Constants.isLoggedIn() == false){
+      console.log('USE EFFECT')
+      history.push('/login')
+    }
+    console.log(Constants.isLoggedIn())
+  },[open]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
