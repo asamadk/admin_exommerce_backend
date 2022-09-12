@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import AppBar from "@mui/material/AppBar";
@@ -53,6 +53,21 @@ const darkTheme = createTheme({
   });
 
 export default function AddSizeOptionModel(props) {
+
+  const [optionname, setOptionName] = useState();
+
+  const optionName = (e) => {
+    console.log(e.target.value)
+    setOptionName(e.target.value)
+  }
+
+  const sizeOptionDetails = () => {
+    const data = {
+      'optionName' : optionname
+    }
+    console.log(data)
+  }
+
   const handleClose = () => {
     props.parentCallback();
   };
@@ -83,8 +98,8 @@ export default function AddSizeOptionModel(props) {
         </AppBar>
         </ThemeProvider>
         <Box sx={bannerMainContainer} >
-            <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Name" variant="outlined" />
-            <Button sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
+            <TextField onChange={(e) => {optionName(e)}} fullWidth sx={inputStyle} id="outlined-basic" label="Name" variant="outlined" />
+            <Button onClick={sizeOptionDetails} sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
           Save
         </Button>
         </Box>
@@ -92,3 +107,5 @@ export default function AddSizeOptionModel(props) {
     </Modal>
   );
 }
+
+//optionName

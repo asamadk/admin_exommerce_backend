@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import AppBar from "@mui/material/AppBar";
@@ -54,16 +54,77 @@ const urlBox = {
 };
 
 const saveButton = {
-  marginTop : '15px',
-  backgroundColor : '#673ab7'
+  marginTop: '15px',
+  backgroundColor: '#673ab7'
 }
 
 const addProductsMain = {
-  marginTop : '30px'
+  marginTop: '30px'
 }
 
 export default function AddProductModel(props) {
-  const [categories, setCategories] = React.useState("Shirts");
+
+  const [productname, setProductname] = useState();
+  const [productrealprice, setProductrealprice] = useState();
+  const [productprice, setProductprice] = useState();
+  const [weight, setWeight] = useState();
+  const [quantity, setQuantity] = useState();
+  const [imageurl1, setImageurl1] = useState();
+  const [imageurl2, setImageurl2] = useState();
+  const [imageurl3, setImageurl3] = useState();
+  const [imageurl4, setImageurl4] = useState();
+
+
+  const productName = (e) => {
+    console.log(e.target.value)
+    setProductname(e.target.value)
+  }
+
+  const realPrice = (e) => {
+    console.log(e.target.value)
+    setProductrealprice(e.target.value)
+  }
+
+  const price = (e) => {
+    console.log(e.target.value)
+    setProductprice(e.target.value)
+  }
+
+  const productWeight = (e) => {
+    console.log(e.target.value)
+    setWeight(e.target.value)
+  }
+
+  const productQuantity = (e) => {
+    console.log(e.target.value)
+    setQuantity(e.target.value)
+  }
+
+  const imageURL1 = (e) => {
+    console.log(e.target.value)
+    setImageurl1(e.target.value)
+  }
+
+  const imageURL2 = (e) => {
+    console.log(e.target.value)
+    setImageurl2(e.target.value)
+  }
+
+  const imageURL3 = (e) => {
+    console.log(e.target.value)
+    setImageurl3(e.target.value)
+  }
+
+  const imageURL4 = (e) => {
+    console.log(e.target.value)
+    setImageurl4(e.target.value)
+  }
+
+  // const productLongDesVal = {
+
+  // }
+
+  const [categories, setCategories] = React.useState('');
 
   const handleClose = () => {
     props.parentCallback();
@@ -102,30 +163,35 @@ export default function AddProductModel(props) {
         <Box sx={addProductsMain}>
           <TextField
             fullWidth
+            onChange={(e) => { productName(e) }}
             sx={inputStyle}
             id="outlined-basic"
             label="Name"
             variant="outlined"
           />
           <TextField
+            onChange={(e) => { realPrice(e) }}
             sx={inputStyle2}
             id="outlined-basic"
             label="Real Price"
             variant="outlined"
           />
           <TextField
+            onChange={(e) => { price(e) }}
             sx={inputStyle2}
             id="outlined-basic"
             label="Price"
             variant="outlined"
           />
           <TextField
+            onChange={(e) => { productWeight(e) }}
             sx={inputStyle2}
             id="outlined-basic"
             label="Weight"
             variant="outlined"
           />
           <TextField
+            onChange={(e) => { productQuantity(e) }}
             sx={inputStyle2}
             id="outlined-basic"
             label="Quantity"
@@ -146,24 +212,28 @@ export default function AddProductModel(props) {
               URLs
             </Typography>
             <TextField
+              onChange={(e) => { imageURL1(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="Image url 1"
               variant="outlined"
             />
             <TextField
+              onChange={(e) => { imageURL2(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="Image url 2"
               variant="outlined"
             />
             <TextField
+              onChange={(e) => { imageURL3(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="Image url 3"
               variant="outlined"
             />
             <TextField
+              onChange={(e) => { imageURL4(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="Image url 4"
@@ -237,7 +307,7 @@ export default function AddProductModel(props) {
             />
           </Box>
           <Box sx={urlBox}>
-          <Typography
+            <Typography
               sx={{ fontSize: 20 }}
               color="text.secondary"
               gutterBottom
