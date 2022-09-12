@@ -1,18 +1,68 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-
+import * as Endpoint from '../Helper/Endpoint'
+import * as Constants from '../Helper/Constants'
 import TextField from '@mui/material/TextField';
 import { bgcolor, borderRadius } from '@mui/system';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { Public } from '@mui/icons-material';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 
 export default function Login() {
+
+  const history = useHistory()
+
+  const [username,setusername] = useState('');
+  const [password, setpassword] = useState('');
+
+  const handleUserNameCHangeInput = (event) => {
+    console.log(event.target.value);
+    setusername(event.target.value);
+  }
+
+  const handlePasswordChangeInput = (event) => {
+    console.log(event.target.value)
+    setpassword(event.target.value);
+  }
+
+  const usernameAndPassword = async () => {
+    const data = {
+      'username' : username,
+      'password' : password
+    }
+    console.log(data)
+    let loginRes = await axios.post(Endpoint.getLoginURL(),data).catch((err) => {
+      console.log(`Error in ${err}`);
+    });
+
+    if(loginRes?.status != Constants.OK ){
+      //error show
+      showLoginError();
+      return;
+    }
+    
+    if(loginRes?.data?.responseWrapper[0] == null){
+      showLoginError()
+    }else{
+      const token = loginRes?.data?.responseWrapper[0]
+      console.log(token);
+      localStorage.setItem(Constants.TOKEN,token)
+      history.push('/home')
+    }
+  }
+
+
+  const showLoginError = () => {
+    console.log('Error in login')
+  }
+
   return (
     <>
       <CssBaseline />
@@ -22,12 +72,12 @@ export default function Login() {
           <Typography sx={signInContainer} variant="h6" component="h2" >Sign in with Email address</Typography>
           <Typography sx={{color: '#9e9e9e', marginBottom: 5, fontSize : 'medium'}} variant="h6" component="h2" >Enter your credentials to continue</Typography>
           <Box sx={boxStyle}>
-            <TextField fullWidth id="outlined-basic" label="Email" variant="outlined" />
+            <TextField fullWidth onChange={(event) => {handleUserNameCHangeInput(event)}} id="outlined-basic" label="Email" variant="outlined" />
           </Box>
           <Box sx={boxStyle} >
-            <TextField fullWidth type={'password'} id="outlined-basic" label="password" variant="outlined" />
+            <TextField fullWidth onChange={(event) => {handlePasswordChangeInput(event)}} type={'password'} id="outlined-basic" label="password" variant="outlined" />
           </Box>
-          <Button sx={btnStyle} variant="contained">Sign in</Button>
+          <Button onClick={usernameAndPassword} sx={btnStyle} variant="contained">Sign in</Button>
         </Box>
       </Container>
     </>

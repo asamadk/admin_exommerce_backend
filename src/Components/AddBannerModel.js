@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import AppBar from "@mui/material/AppBar";
@@ -53,6 +53,63 @@ const bannerMainContainer = {
 }
 
 export default function AddBannerModel(props) {
+
+  const [bannerimg1, setBannerimg1] = useState();
+  const [bannerimg2, setBannerimg2] = useState();
+  const [bannerimg3, setBannerimg3] = useState();
+  const [bannerimg4, setBannerimg4] = useState();
+  const [bannerimg5, setBannerimg5] = useState();
+  const [bannerimg6, setBannerimg6] = useState();
+  const [bannerimg7, setBannerimg7] = useState();
+
+  const bannerImage1 = (e) => {
+    console.log(e.target.value)
+    setBannerimg1(e.target.value)
+  }
+
+  const bannerImage2 = (e) => {
+    console.log(e.target.value)
+    setBannerimg2(e.target.value)
+  }
+
+  const bannerImage3 = (e) => {
+    console.log(e.target.value)
+    setBannerimg3(e.target.value)
+  }
+
+  const bannerImage4 = (e) => {
+    console.log(e.target.value)
+    setBannerimg4(e.target.value)
+  }
+
+  const bannerImage5 = (e) => {
+    console.log(e.target.value)
+    setBannerimg5(e.target.value)
+  }
+
+  const bannerImage6 = (e) => {
+    console.log(e.target.value)
+    setBannerimg6(e.target.value)
+  }
+
+  const bannerImage7 = (e) => {
+    console.log(e.target.value)
+    setBannerimg7(e.target.value)
+  }
+
+  const bannerDetails = () => {
+    const data = {
+      'bannerimg1' : bannerimg1,
+      'bannerimg2' : bannerimg2,
+      'bannerimg3' : bannerimg3,
+      'bannerimg4' : bannerimg4,
+      'bannerimg5' : bannerimg5,
+      'bannerimg6' : bannerimg6,
+      'bannerimg7' : bannerimg7,
+    }
+    console.log(data)
+  }
+
   const handleClose = () => {
     props.parentCallback();
   };
@@ -84,14 +141,14 @@ export default function AddBannerModel(props) {
         </AppBar>
         </ThemeProvider>
         <Box sx={bannerMainContainer}>
-            <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 1" variant="outlined" />
-            <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 2" variant="outlined" />
-            <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 3" variant="outlined" />
-            <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 4" variant="outlined" />
-            <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 5" variant="outlined" />
-            <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 6" variant="outlined" />
-            <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 7" variant="outlined" />
-            <Button sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
+            <TextField onChange={(e) => {bannerImage1(e)}} fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 1" variant="outlined" />
+            <TextField onChange={(e) => {bannerImage2(e)}} fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 2" variant="outlined" />
+            <TextField onChange={(e) => {bannerImage3(e)}} fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 3" variant="outlined" />
+            <TextField onChange={(e) => {bannerImage4(e)}} fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 4" variant="outlined" />
+            <TextField onChange={(e) => {bannerImage5(e)}} fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 5" variant="outlined" />
+            <TextField onChange={(e) => {bannerImage6(e)}} fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 6" variant="outlined" />
+            <TextField onChange={(e) => {bannerImage7(e)}} fullWidth sx={inputStyle} id="outlined-basic" label="Banner img 7" variant="outlined" />
+            <Button onClick={bannerDetails} sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
           Save
         </Button>
             {/* <TextField sx={inputStyle2} id="outlined-basic" label="Real Price" variant="outlined" /> */}

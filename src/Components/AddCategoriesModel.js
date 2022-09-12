@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import AppBar from "@mui/material/AppBar";
@@ -53,6 +53,28 @@ const darkTheme = createTheme({
   });
 
 export default function AddCategoriesModel(props) {
+
+  const [categoryname, setCategoryname] = useState()
+  const [categoryimg, setCategoryimg] = useState()
+
+  const categoryName = (e) => {
+    console.log(e.target.value)
+    setCategoryname(e.target.value)
+  }
+
+  const categoryImg = (e) => {
+    console.log(e.target.value)
+    setCategoryimg(e.target.value)
+  }
+
+  const categoryDetails = () => {
+    const data = {
+      'categoryName' : categoryname,
+      'categoryImage' : categoryimg
+    }
+    console.log(data)
+  }
+
   const handleClose = () => {
     props.parentCallback();
   };
@@ -83,9 +105,9 @@ export default function AddCategoriesModel(props) {
         </AppBar>
         </ThemeProvider>
         <Box sx={bannerMainContainer} >
-            <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Category Name" variant="outlined" />
-            <TextField fullWidth sx={inputStyle} id="outlined-basic" label="Category img" variant="outlined" />
-            <Button sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
+            <TextField onChange={(e) => {categoryName(e)}} fullWidth sx={inputStyle} id="outlined-basic" label="Category Name" variant="outlined" />
+            <TextField onChange={(e) => {categoryImg(e)}} fullWidth sx={inputStyle} id="outlined-basic" label="Category img" variant="outlined" />
+            <Button onClick={categoryDetails} sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
           Save
         </Button>
         </Box>
