@@ -1,5 +1,5 @@
 export const NAVIGATION_DATA = [
-    'Dashboard','User','Orders', 'Coupon', 'Category', 'Product', 'Add','Logout'
+    'Dashboard','User','Orders', 'Coupon', 'Category', 'Product', 'Banners' ,'Add', 'Logout'
 ]
 
 export const COLORS = [

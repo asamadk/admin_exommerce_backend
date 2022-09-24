@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,32 +8,123 @@ import TableRow from "@mui/material/TableRow";
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import * as Constants from '../Helper/Constants'
+import * as Endpoint from '../Helper/Endpoint'
+import { useHistory } from "react-router-dom";
+import axios from 'axios';
+import Avatar from '@mui/material/Avatar';
+import CircularProgress from '@mui/material/CircularProgress';
+import AlifCircularLoader from '../Components/AlifCircularProgress';
+import AlifAlert from '../Components/Alert';
+import { Box } from '@mui/system';
+import AddCategoriesModel from '../Components/AddCategoriesModel';
+
 
 function createData(id, name, categoryImageUrl, edit, del) {
   return { id, name, categoryImageUrl, edit, del };
 }
 
 const column = [
-  'Id', 'Name', 'categoryImageUrl', 'Edit', 'Delete'
+  'Image', 'Id','Name', 'Edit', 'Delete'
 ]
 
-const rows = [
-  createData(1, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(2, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(3, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(4, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(5, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(6, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(7, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(8, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(9, "Hiba Fatima Kirmani", "URL", 1, 0),
-  createData(10, "Hiba Fatima Kirmani", "URL", 1, 0),
-];
-
 export default function Category() {
+
+  const [openCategory, setOpenCategory] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [loader, setLoader] = useState(false);
+  const [singleCategory, setSingleCategory] = useState({})
+  const [severity, setSeverity] = useState('error');
+  const [show, setShow] = useState(false)
+  const [message , setMessage] = useState('Something went wrong')
+
+  const history = useHistory()
+
+  useEffect(() => {
+    if(Constants.isLoggedIn == false) {
+      history.push('/login')
+    }
+
+    axios.get(Endpoint.getAllCategories(), {
+    }).catch((err) => {
+      console.log(err)
+    }).then((res) => {
+      if(res?.data?.responseWrapper !== null){
+        // console.log(JSON.stringify(res.data.responseWrapper[0]))
+        setCategories(res.data.responseWrapper)
+      }
+    })
+
+  }, [])
+
+  const requestHeader = {
+    Authorization: `Bearer ${localStorage.getItem(Constants.TOKEN)}`
+
+  }
+
+  const deletingCategory = (event) => {
+    const categoryId = event?.currentTarget.id
+    console.log(categoryId)
+    setLoader(true)
+    axios.delete(Endpoint.deleteCategory(categoryId), {
+      headers : requestHeader
+    }).then((res) => {
+      console.log(res.data)
+      setLoader(false)
+      setMessage('Deleted Successfully')
+      setSeverity('success')
+      setShow(true)
+    }).catch((err) =>{
+      console.log(err)
+      setLoader(false)
+      setShow(true)
+      setMessage('Something went wrong')
+      setSeverity('error')
+    })
+
+    setTimeout(() => {
+      setShow(false)
+    }, 2000)
+  }
+  ////////////////////////////////////////////////////////////////
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const editOrderDtetails = (event) => {
+    for(let cat of categories){
+      if(event?.currentTarget.id == cat?.category_Id){
+        console.log(event?.currentTarget?.id)
+        setOpenCategory(true);
+        setSingleCategory(cat)
+        console.log(singleCategory)
+      }
+    }
+    handleClose();
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    for(let cat of categories){
+      cat.open = false
+    }
+  };
+
+  const handleCategoryModalClose = () => {
+    setOpenCategory(false)
+  }
+
+  //////////////////////////////////////////////////////////////
+
   return (
     <>
+      <AlifCircularLoader open={loader}/>
       <TableContainer>
+      <AlifAlert
+          severity={severity}
+          show={show}
+          message={message}
+        />
         <Table>
           <TableHead>
             <TableRow>
@@ -43,22 +134,19 @@ export default function Category() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows?.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
+            {categories?.map((category) => (
+              <TableRow key={category.category_Id}>
+                <TableCell><Avatar alt="Remy Sharp" src={category.category_image?.toString()} /></TableCell>
+                <TableCell>#{category.category_Id}</TableCell>
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {category.category_Name}
                 </TableCell>
-                {/* <TableCell>{row.discount}</TableCell>
-                <TableCell>{row.maxDiscount}</TableCell>
-                <TableCell>{row.expiryDate.toString()}</TableCell> */}
-                <TableCell>{row.categoryImageUrl.toString()}</TableCell>
                 <TableCell>
-                  <Button variant="outlined" startIcon={<EditIcon />}>
+                  <Button onClick={editOrderDtetails} id={category.category_Id} sx={{backgroundColor : '#673ab7'}} variant="contained" startIcon={<EditIcon />}>
                     Edit
                   </Button>
                 </TableCell>
-                <TableCell><Button variant="outlined" startIcon={<DeleteIcon />}>
+                <TableCell><Button id={category.category_Id} onClick={deletingCategory} sx={{backgroundColor : '#673ab7'}} variant="contained" startIcon={<DeleteIcon />}>
                   Delete
                 </Button></TableCell>
               </TableRow>
@@ -66,6 +154,9 @@ export default function Category() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box  sx={{marginTop : '50px'}}>
+        {openCategory && <AddCategoriesModel cat={singleCategory} parentCallback={handleCategoryModalClose} /> }
+       </Box>
     </>
   )
 }

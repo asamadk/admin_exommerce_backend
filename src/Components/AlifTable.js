@@ -15,9 +15,11 @@ import AddIcon from '@mui/icons-material/Add';
 
 
 export default function AlifTable(props) {
-  const [rows, setRows] = useState(props?.rows);
+  const [users, setUsers] = useState(props?.user);
   const [column, setColumns] = useState(props?.col);
   const [source, setSource] = useState(props?.source);
+
+  console.log(props)
 
   return (
     <TableContainer component={Paper}>
@@ -31,15 +33,15 @@ export default function AlifTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows?.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
+          {users.map((user) => (
+            <TableRow key={user.user_id}>
+              <TableCell>{user.user_id}</TableCell>
               <TableCell component="th" scope="row">
-                {row.name}
+                {user.user_Fname}
               </TableCell>
-              <TableCell>{row.city}</TableCell>
-              <TableCell>{row.state}</TableCell>
-              <TableCell>{row.isActive.toString()}</TableCell>
+              <TableCell>{user.user_City}</TableCell>
+              <TableCell>{user.user_State}</TableCell>
+              <TableCell>{'2'}</TableCell>
               <TableCell>
                 {source === "user" && (
                   <LoadingButton
