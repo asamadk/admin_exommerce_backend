@@ -1,15 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import * as Constants from '../Helper/Constants'
+import * as Endpoint from '../Helper/Endpoint'
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { useHistory } from "react-router-dom";
 import LockIcon from "@mui/icons-material/Lock";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Switch from "@mui/material/Switch";
 import Paper from "@mui/material/Paper";
+import axios from 'axios';
 
 function createData( id, name, discount, maxDiscount, expiryDate, edit, del) {
   return { id, name, discount, maxDiscount, expiryDate, edit, del };
@@ -33,6 +40,32 @@ const rows = [
 ];
 
 export default function Coupon() {
+
+  const [coupons , setCoupons] = useState();
+
+  const history = useHistory()
+
+  useEffect(() => {
+    if(Constants.isLoggedIn == false) {
+      history.push('/login')
+    }
+
+    const requestHeader = {
+      Authorization : `Bearer ${localStorage.getItem(Constants.TOKEN)}` 
+    }
+    
+    axios.get(Endpoint.getAllCoupons(), {
+      headers : requestHeader
+    }).catch((err) => {
+      console.log(err)
+    }).then((res) => {
+      if(res?.data?.responseWrapper !== null){
+        // console.log(JSON.stringify(res.data.responseWrapper[0]))
+        setCoupons(res.data.responseWrapper)
+      }
+    })
+  }, [])
+
   return (
     <>
       <TableContainer>
@@ -45,17 +78,25 @@ export default function Coupon() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows?.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
+            {coupons?.map((coupon) => (
+              <TableRow key={coupon.couponsId}>
+                <TableCell>{coupon.couponsId}</TableCell>
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  {coupon.couponName}
                 </TableCell>
-                <TableCell>{row.discount}</TableCell>
-                <TableCell>{row.maxDiscount}</TableCell>
-                <TableCell>{row.expiryDate.toString()}</TableCell>
-                <TableCell>{row.edit.toString()}</TableCell>
-                <TableCell>{row.del.toString()}</TableCell>
+                <TableCell>{coupon?.couponDiscount}</TableCell>
+                <TableCell>{coupon?.maximumDiscount}</TableCell>
+                <TableCell>{coupon?.expireDate?.toString()}</TableCell>
+                <TableCell>
+                <Button sx={{backgroundColor : '#673ab7'}} variant="contained" startIcon={<EditIcon />}>
+                    Edit
+                  </Button>
+                </TableCell>
+                <TableCell>
+                <Button sx={{backgroundColor : '#673ab7'}} variant="contained" startIcon={<DeleteIcon />}>
+                  Delete
+                </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

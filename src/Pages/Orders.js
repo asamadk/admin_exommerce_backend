@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,32 +8,16 @@ import TableRow from "@mui/material/TableRow";
 import Chip from "@mui/material/Chip";
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-
-function createData(
-  id,
-  Username,
-  couponName,
-  orderDate,
-  ArrivalDate,
-  Source,
-  Status,
-  mode,
-  total,
-  paid
-) {
-  return {
-    id,
-    Username,
-    couponName,
-    orderDate,
-    ArrivalDate,
-    Source,
-    Status,
-    mode,
-    total,
-    paid,
-  };
-}
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import * as Endpoint from '../Helper/Endpoint'
+import * as Constants from '../Helper/Constants'
+import { useHistory } from "react-router-dom";
+import axios from "axios";
+import AddOrderModel from "../Components/AddOrdersModel";
+import { Box } from "@mui/system";
+import AlifAlert from "../Components/Alert";
 
 const column = [
   "Id",
@@ -49,85 +33,112 @@ const column = [
   "More",
 ];
 
-const rows = [
-  createData(
-    1,
-    "Hiba Fatima Kirmani",
-    "FIRST15",
-    "12/12/22",
-    "15/12/22",
-    "Outside",
-    "Placed",
-    "COD",
-    "1599",
-    false
-  ),
-  createData(
-    2,
-    "Hiba Fatima Kirmani",
-    "FIRST15",
-    "12/12/22",
-    "15/12/22",
-    "Outside",
-    "Placed",
-    "COD",
-    "1599",
-    true
-  ),
-  createData(
-    3,
-    "Hiba Fatima Kirmani",
-    "FIRST15",
-    "12/12/22",
-    "15/12/22",
-    "Outside",
-    "Placed",
-    "COD",
-    "1599",
-    true
-  ),
-  createData(
-    4,
-    "Hiba Fatima Kirmani",
-    "FIRST15",
-    "12/12/22",
-    "15/12/22",
-    "Outside",
-    "Placed",
-    "COD",
-    "1599",
-    true
-  ),
-  createData(
-    5,
-    "Hiba Fatima Kirmani",
-    "FIRST15",
-    "12/12/22",
-    "15/12/22",
-    "Outside",
-    "Placed",
-    "COD",
-    "1599",
-    false
-  ),
-  createData(
-    6,
-    "Hiba Fatima Kirmani",
-    "FIRST15",
-    "12/12/22",
-    "15/12/22",
-    "Outside",
-    "Placed",
-    "COD",
-    "1599",
-    true
-  ),
-];
-
 export default function Orders() {
+
+  const [orders, setOrders] = useState([])
+  const [openOrder, setOpenOrder] = useState(false);
+  const [singleOrder, setSingalOrder] = useState({})
+  const [severity, setSeverity] = useState('error')
+  const [show, setShow] = useState(false)
+  const [message, setMessage] = useState('Something went wrong')
+
+  const history = useHistory()
+
+  const requestHeader = {
+    Authorization: `Bearer ${localStorage.getItem(Constants.TOKEN)}`
+
+  }
+
+  useEffect(() => {
+    if (Constants.isLoggedIn() == false) {
+      history.push('/Login')
+    }
+    console.log('inside use effect')
+    axios.get(Endpoint.getAllOrders(), {
+      headers: requestHeader
+    }).catch((err) => {
+      console.log(err)
+    }).then((res) => {
+      if (res?.data?.responseWrapper !== null) {
+        setOrders(res.data.responseWrapper);
+      }
+    })
+
+  }, [])
+
+  const deletingOrders = (event) => {
+    
+    const orderId = event?.currentTarget.id
+    axios.delete(Endpoint.deleteOrderById(orderId), {
+      headers : requestHeader
+    }).then((res) => {
+      console.log(orders.length)
+      setSeverity('success')
+      setShow(true)
+      setMessage('Deleted Successfully')
+      orders.push( orders.filter(order => {
+        return order.orderId != orderId
+      })
+      )
+      console.log(orders.length)
+      console.log(res.data)
+    }).catch((err) =>{
+      console.log(err)
+      setSeverity('error')
+      setShow(true)
+      setMessage('Something went wrong')
+    })
+
+    setTimeout(() => {
+      setShow(false)
+    },2000)
+
+  }
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+
+    for(let order of orders){
+      if(event.currentTarget.id == order?.orderId){
+        order.open = true
+      }else{
+        order.open = false
+      }
+    }
+  };
+
+  const editOrderDtetails = (event) => {
+    for(let order of orders){
+      if(event.currentTarget.id == order?.orderId){
+        setOpenOrder(true);
+        setSingalOrder(order)
+      }
+    }
+    handleClose();
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    for(let order of orders){
+      order.open = false
+    }
+  };
+
+  const handleOrderModalClose = () => {
+    setOpenOrder(false)
+  }
+
   return (
     <>
       <TableContainer>
+        <AlifAlert
+          severity={severity}
+          show={show}
+          message={message}
+        />
         <Table>
           <TableHead>
             <TableRow>
@@ -137,36 +148,60 @@ export default function Orders() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows?.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
+            {orders?.map((order) => (
+              <TableRow key={order?.orderId}>
+                <TableCell>#{order?.orderId}</TableCell>
                 <TableCell component="th" scope="row">
-                  {row.Username}
+                  {order?.userModel?.user_Fname}
                 </TableCell>
-                <TableCell>{row.couponName}</TableCell>
-                <TableCell>{row.orderDate}</TableCell>
-                <TableCell>{row.ArrivalDate}</TableCell>
-                <TableCell>{row.Source}</TableCell>
-                <TableCell>{row.Status}</TableCell>
-                <TableCell>{row.mode}</TableCell>
-                <TableCell>{row.total}</TableCell>
+                <TableCell>{order?.couponName}</TableCell>
+                <TableCell>{new Date(order?.orderDate).toDateString()}</TableCell>
+                <TableCell>{new Date(order?.expectedArrivalDate).toDateString()}</TableCell>
+                <TableCell>{order?.orderSource}</TableCell>
+                <TableCell>{order?.orderStatus}</TableCell>
+                <TableCell>{order?.paymentMode}</TableCell>
+                <TableCell>₹{order?.price}</TableCell>
                 <TableCell>
-                  {row.paid === true ? (
+                  {order?.paid === true ? (
                     <Chip size="small" label="paid" color="success" />
                   ) : (
                     <Chip size="small" label="unpaid" color="error" />
                   )}
                 </TableCell>
                 <TableCell>
-                  <IconButton aria-label="fingerprint" color="secondary">
+                  <Button aria-label="fingerprint" color="secondary"
+                    id={order?.orderId}
+                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={handleClick}
+                  >
                     <MoreVertIcon />
-                  </IconButton>
+
+                  </Button>
+                  <Menu
+                    id={order?.orderId}
+                    anchorEl={anchorEl}
+                    open={order?.open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      'aria-labelledby': 'basic-button',
+                    }}
+                  >
+                    <MenuItem id={order?.orderId} onClick={handleClose}>View</MenuItem>
+                    <MenuItem id={order?.orderId} onClick={editOrderDtetails}>Edit</MenuItem>
+                    <MenuItem id={order?.orderId} onClick={deletingOrders}>Delete</MenuItem>
+                    <MenuItem id={order?.orderId} onClick={handleClose}>Generate Bill</MenuItem>
+                  </Menu>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <Box sx={{marginTop : '50px'}}>
+        {openOrder && <AddOrderModel order={singleOrder}  parentCallback={handleOrderModalClose} />}
+      </Box>
     </>
   );
 }

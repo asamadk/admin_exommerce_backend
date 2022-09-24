@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import AppBar from "@mui/material/AppBar";
@@ -12,8 +12,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Select from "@mui/material/Select";
-
+import * as Endpoint from '../Helper/Endpoint'
+import * as Constants from '../Helper/Constants'
+import MenuItem from '@mui/material/MenuItem';
+import AlifCircularLoader from "./AlifCircularProgress";
+import AlifAlert from "./Alert";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -59,7 +64,7 @@ const saveButton = {
 }
 
 const addProductsMain = {
-  marginTop: '30px'
+  marginTop: '50px'
 }
 
 export default function AddProductModel(props) {
@@ -73,7 +78,60 @@ export default function AddProductModel(props) {
   const [imageurl2, setImageurl2] = useState();
   const [imageurl3, setImageurl3] = useState();
   const [imageurl4, setImageurl4] = useState();
+  const [productlongDesc, setProductlongDesc] = useState();
+  const [productSmallDesc, setProductSmallDesc] = useState();
+  const [category, setCategory] = useState([]);
+  const [productQuote, setProductQuote] = useState()
+  const [productComposition, setProductComposition] = useState()
+  const [productDescription, setProductDescription] = useState()
+  const [weave, setWeave] = useState();
+  const [mill, setMill] = useState();
+  const [fabricShine, setFabricShine] = useState();
+  const [sizeFit, setSizeFit] = useState();
+  const [washcare, setWashcare] = useState();
+  const [categoryId, setCategoryId] = useState();
+  const [loader, setLoader] = useState(false)
+  const [severity, setSeverity] = useState('error')
+  const [show, setShow] = useState(false)
+  const [message, setMessage] = useState('save Failed!')
 
+
+  useEffect(() => {
+    axios.get(Endpoint.getAllCategories()).then((res) => {
+      setCategory(res?.data?.responseWrapper)
+      populateProduct(props.product)
+      // console.log(JSON.parse(res?.data?.responseWrapper[0]))
+    }).catch((err) => {
+      console.log(err)
+    })
+  }, [])
+
+  const populateProduct = (product) => {
+    if (product == null) {
+      return;
+    }
+    setProductname(product?.product_name)
+    setProductrealprice(product?.product_real_price)
+    setProductprice(product?.product_price)
+    setWeight(product?.product_weight)
+    setQuantity(product?.quantity)
+    setImageurl1(product?.product_img1)
+    setImageurl2(product?.product_img2)
+    setImageurl3(product?.product_img3)
+    setImageurl4(product?.product_img4)
+    const longDesObj = JSON.parse(product?.product_long_Desc)
+    const shortDesObj = JSON.parse(product?.product_small_Desc)
+    setProductQuote(longDesObj?.productQuote)
+    setProductComposition(longDesObj?.composition)
+    setProductDescription(longDesObj?.description)
+    setWeave(shortDesObj?.weave)
+    setMill(shortDesObj?.mill)
+    setFabricShine(shortDesObj['fabric shine'])
+    setSizeFit(shortDesObj?.sizefit)
+    setWashcare(shortDesObj?.washcare)
+    setCategoryId(product?.categoryModel?.category_Id)
+    console.log(shortDesObj)
+  }
 
   const productName = (e) => {
     console.log(e.target.value)
@@ -120,9 +178,45 @@ export default function AddProductModel(props) {
     setImageurl4(e.target.value)
   }
 
-  // const productLongDesVal = {
+  const productQuo = (e) => {
+    console.log(e.target.value)
+    setProductQuote(e.target.value)
+  }
 
-  // }
+  const productComp = (e) => {
+    console.log(e.target.value)
+    setProductComposition(e.target.value)
+  }
+
+  const productDes = (e) => {
+    console.log(e.target.value)
+    setProductDescription(e.target.value)
+  }
+
+  const productWeave = (e) => {
+    console.log(e.target.value)
+    setWeave(e.target.value)
+  }
+
+  const productMill = (e) => {
+    console.log(e.target.value)
+    setMill(e.target.value)
+  }
+
+  const productFabricShine = (e) => {
+    console.log(e.target.value)
+    setFabricShine(e.target.value)
+  }
+
+  const productSizeFit = (e) => {
+    console.log(e.target.value)
+    setSizeFit(e.target.value)
+  }
+
+  const productWashcare = (e) => {
+    console.log(e.target.value)
+    setWashcare(e.target.value)
+  }
 
   const [categories, setCategories] = React.useState('');
 
@@ -130,9 +224,63 @@ export default function AddProductModel(props) {
     props.parentCallback();
   };
 
-  const handleCategoryChange = () => {
-    console.log("Change category");
+  const handleCategoryChange = (e) => {
+    console.log("Change category", e.target.value);
+    setCategories(e.target.value)
   };
+
+  const requestHeader = {
+    Authorization: `Bearer ${localStorage.getItem(Constants.TOKEN)}`
+  }
+
+  const productDetails = () => {
+    const data = {
+      'product_name': productname,
+      'product_real_price': productrealprice,
+      'product_price': productprice,
+      'product_weight': weight,
+      'quantity': quantity,
+      'product_img1': imageurl1,
+      'product_img2': imageurl2,
+      'product_img3': imageurl3,
+      'product_img4': imageurl4,
+      'product_long_Desc': JSON.stringify({
+        'productQuote': productQuote,
+        'composition': productComposition,
+        'description': productDescription
+      }),
+      'product_small_Desc': JSON.stringify({
+        'weave': weave,
+        'mill': mill,
+        'fabric shine': fabricShine,
+        'sizefit': sizeFit,
+        'washcare': washcare,
+
+      })
+    }
+    console.log(data)
+
+    axios.post(Endpoint.postProducts(categories), data, {
+      headers: requestHeader
+    }).then((res) => {
+      console.log(res.data)
+      setShow(true)
+      setSeverity('success')
+      setMessage('saved successfully')
+      setTimeout(() => {
+        handleClose()
+      },2000)
+    }).catch((err) => {
+      window.scrollTo(0,0)
+      console.log(err)
+      setShow(true)
+      setSeverity('error')
+      setMessage('something went wrong')
+      setTimeout(() => {
+        setShow(false)
+      },2000)
+    })
+  }
 
   return (
     <Modal
@@ -141,6 +289,7 @@ export default function AddProductModel(props) {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
+
         <ThemeProvider theme={darkTheme}>
           <AppBar position="fixed">
             <Toolbar>
@@ -161,6 +310,11 @@ export default function AddProductModel(props) {
           </AppBar>
         </ThemeProvider>
         <Box sx={addProductsMain}>
+          <AlifAlert
+            severity={severity}
+            show={show}
+            message={message}
+          />
           <TextField
             fullWidth
             onChange={(e) => { productName(e) }}
@@ -168,6 +322,7 @@ export default function AddProductModel(props) {
             id="outlined-basic"
             label="Name"
             variant="outlined"
+            value={productname}
           />
           <TextField
             onChange={(e) => { realPrice(e) }}
@@ -175,6 +330,7 @@ export default function AddProductModel(props) {
             id="outlined-basic"
             label="Real Price"
             variant="outlined"
+            value={productrealprice}
           />
           <TextField
             onChange={(e) => { price(e) }}
@@ -182,6 +338,7 @@ export default function AddProductModel(props) {
             id="outlined-basic"
             label="Price"
             variant="outlined"
+            value={productprice}
           />
           <TextField
             onChange={(e) => { productWeight(e) }}
@@ -189,6 +346,7 @@ export default function AddProductModel(props) {
             id="outlined-basic"
             label="Weight"
             variant="outlined"
+            value={weight}
           />
           <TextField
             onChange={(e) => { productQuantity(e) }}
@@ -196,11 +354,13 @@ export default function AddProductModel(props) {
             id="outlined-basic"
             label="Quantity"
             variant="outlined"
+            value={quantity}
           />
           <Box>
             <FormControlLabel
               control={<Switch defaultChecked />}
               label="available"
+            // value={availa}
             />
           </Box>
           <Box sx={urlBox}>
@@ -217,6 +377,7 @@ export default function AddProductModel(props) {
               id="outlined-basic"
               label="Image url 1"
               variant="outlined"
+              value={imageurl1}
             />
             <TextField
               onChange={(e) => { imageURL2(e) }}
@@ -224,12 +385,14 @@ export default function AddProductModel(props) {
               id="outlined-basic"
               label="Image url 2"
               variant="outlined"
+              value={imageurl2}
             />
             <TextField
               onChange={(e) => { imageURL3(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="Image url 3"
+              value={imageurl3}
               variant="outlined"
             />
             <TextField
@@ -237,6 +400,7 @@ export default function AddProductModel(props) {
               sx={inputStyle2}
               id="outlined-basic"
               label="Image url 4"
+              value={imageurl4}
               variant="outlined"
             />
           </Box>
@@ -249,21 +413,27 @@ export default function AddProductModel(props) {
               Product long description
             </Typography>
             <TextField
+              onChange={(e) => { productQuo(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="product Quote"
+              value={productQuote}
               variant="outlined"
             />
             <TextField
+              onChange={(e) => { productComp(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="product composition"
+              value={productComposition}
               variant="outlined"
             />
             <TextField
+              onChange={(e) => { productDes(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="product description"
+              value={productDescription}
               variant="outlined"
             />
           </Box>
@@ -276,33 +446,43 @@ export default function AddProductModel(props) {
               Product small description
             </Typography>
             <TextField
+              onChange={(e) => { productWeave(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="product weave"
+              value={weave}
               variant="outlined"
             />
             <TextField
+              onChange={(e) => { productMill(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="product mill"
+              value={mill}
               variant="outlined"
             />
             <TextField
+              onChange={(e) => { productFabricShine(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="product fabric shine"
+              value={fabricShine}
               variant="outlined"
             />
             <TextField
+              onChange={(e) => { productSizeFit(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="product sizefit"
+              value={sizeFit}
               variant="outlined"
             />
             <TextField
+              onChange={(e) => { productWashcare(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="product washcare"
+              value={washcare}
               variant="outlined"
             />
           </Box>
@@ -317,12 +497,18 @@ export default function AddProductModel(props) {
             <Select
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
-              value={categories}
-              onChange={handleCategoryChange}
-            ></Select>
+              value={categoryId}
+              onChange={(e) => { handleCategoryChange(e) }}
+            >
+              {
+                category.map((cat) => {
+                  return <MenuItem value={cat.category_Id}>{cat.category_Name}</MenuItem>
+                })
+              }
+            </Select>
           </Box>
         </Box>
-        <Button sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
+        <Button onClick={productDetails} sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
           Save
         </Button>
       </Box>

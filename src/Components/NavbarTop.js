@@ -21,6 +21,7 @@ import PaidIcon from "@mui/icons-material/Paid";
 import ListItemText from "@mui/material/ListItemText";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import FlagIcon from '@mui/icons-material/Flag';
 import * as Data from "../Helper/Data";
 import * as Constants from "../Helper/Constants";
 import Body from "../Pages/Body";
@@ -37,6 +38,7 @@ import CheckroomIcon from '@mui/icons-material/Checkroom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Link, useHistory } from "react-router-dom";
 import { useEffect } from "react";
+import Banners from "../Pages/Banners";
 
 const drawerWidth = 240;
 
@@ -141,6 +143,11 @@ function NavbarTop() {
     console.log('changePage')
   }
 
+  const logout = () => {
+    localStorage.removeItem(Constants.TOKEN)
+    history.push('/login')
+  }
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -179,6 +186,10 @@ function NavbarTop() {
         <List>
           {Data.NAVIGATION_DATA.map((text) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }} onClick={() => {
+              if(text === Constants.LOGOUT) {
+                logout()
+                return
+              }
               setPageRef(text);
               setNavbarText(text);
             }} >
@@ -203,6 +214,7 @@ function NavbarTop() {
                   {text === Constants.CATEGORY && <CategoryIcon />}
                   {text === Constants.PRODUCT && <CheckroomIcon />}
                   {text === Constants.ADD && <AddCircleIcon />}
+                  {text === Constants.BANNER && <FlagIcon/>}
                   {text === Constants.LOGOUT && <LoginIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
@@ -220,6 +232,7 @@ function NavbarTop() {
         { pageRef === Constants.COUPON &&  <Coupon/>}
         { pageRef === Constants.CATEGORY &&  <Category/>}
         { pageRef === Constants.PRODUCT &&  <Product/>}
+        { pageRef === Constants.BANNER && <Banners/>}
         { pageRef === Constants.ADD &&  <AddData />}
         {/* { pageRef === Constants.LOGOUT &&  <Link to={'/login'}/>} */}
       </Box>
