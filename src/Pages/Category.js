@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -37,10 +37,13 @@ export default function Category() {
   const [severity, setSeverity] = useState('error');
   const [show, setShow] = useState(false)
   const [message , setMessage] = useState('Something went wrong')
+  const [reducerVavlue, forceUpdate] = useReducer(x => x + 1, 0)
+
 
   const history = useHistory()
 
   useEffect(() => {
+    setLoader(true)
     if(Constants.isLoggedIn == false) {
       history.push('/login')
     }
@@ -48,14 +51,16 @@ export default function Category() {
     axios.get(Endpoint.getAllCategories(), {
     }).catch((err) => {
       console.log(err)
+      setLoader(false)
     }).then((res) => {
+      setLoader(false)
       if(res?.data?.responseWrapper !== null){
         // console.log(JSON.stringify(res.data.responseWrapper[0]))
         setCategories(res.data.responseWrapper)
       }
     })
 
-  }, [])
+  }, [reducerVavlue])
 
   const requestHeader = {
     Authorization: `Bearer ${localStorage.getItem(Constants.TOKEN)}`
@@ -74,6 +79,7 @@ export default function Category() {
       setMessage('Deleted Successfully')
       setSeverity('success')
       setShow(true)
+      forceUpdate()
     }).catch((err) =>{
       console.log(err)
       setLoader(false)
@@ -93,11 +99,10 @@ export default function Category() {
 
   const editOrderDtetails = (event) => {
     for(let cat of categories){
-      if(event?.currentTarget.id == cat?.category_Id){
-        console.log(event?.currentTarget?.id)
+      if(event.currentTarget.id == cat?.category_Id){
         setOpenCategory(true);
+        console.log(cat?.category_Id)
         setSingleCategory(cat)
-        console.log(singleCategory)
       }
     }
     handleClose();
@@ -155,7 +160,7 @@ export default function Category() {
         </Table>
       </TableContainer>
       <Box  sx={{marginTop : '50px'}}>
-        {openCategory && <AddCategoriesModel cat={singleCategory} parentCallback={handleCategoryModalClose} /> }
+        {openCategory && <AddCategoriesModel source={Constants.EDIT} cat={singleCategory} parentCallback={handleCategoryModalClose} /> }
        </Box>
     </>
   )

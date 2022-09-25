@@ -113,12 +113,12 @@ export default function AddData() {
             </Grid>
           ))}
         </Grid>
-        {productModal && <AddProductModel parentCallback={handleProductModalClose} />}
-        {couponModal && <AddCouponModel parentCallback={handleCouponModalClose} />}
-        {orderModal && <AddOrderModel parentCallback={handleOrderModalClose} />}
-        {bannerModal && <AddBannerModel parentCallback={handleBannerModalClose} />}
-        {sizeOptionModal && <AddSizeOptionModel parentCallback={handleSizeOptionModalClose} />}
-        {categoriesModal && <AddCategoriesModel parentCallback={handleCategoriesModalClose} />}
+        {productModal && <AddProductModel source={Constants.ADD} parentCallback={handleProductModalClose} />}
+        {couponModal && <AddCouponModel source={Constants.ADD} parentCallback={handleCouponModalClose} />}
+        {orderModal && <AddOrderModel source={Constants.ADD} parentCallback={handleOrderModalClose} />}
+        {bannerModal && <AddBannerModel source={Constants.ADD} parentCallback={handleBannerModalClose} />}
+        {sizeOptionModal && <AddSizeOptionModel source={Constants.ADD} parentCallback={handleSizeOptionModalClose} />}
+        {categoriesModal && <AddCategoriesModel source={Constants.ADD} parentCallback={handleCategoriesModalClose} />}
       </Box>
     </>
   );

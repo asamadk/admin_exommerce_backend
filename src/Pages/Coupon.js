@@ -17,6 +17,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import Switch from "@mui/material/Switch";
 import Paper from "@mui/material/Paper";
 import axios from 'axios';
+import AlifCircularLoader from '../Components/AlifCircularProgress';
 
 function createData( id, name, discount, maxDiscount, expiryDate, edit, del) {
   return { id, name, discount, maxDiscount, expiryDate, edit, del };
@@ -42,10 +43,11 @@ const rows = [
 export default function Coupon() {
 
   const [coupons , setCoupons] = useState();
-
+  const [loader, setLoader] = useState(false)
   const history = useHistory()
 
   useEffect(() => {
+    setLoader(true)
     if(Constants.isLoggedIn == false) {
       history.push('/login')
     }
@@ -57,8 +59,10 @@ export default function Coupon() {
     axios.get(Endpoint.getAllCoupons(), {
       headers : requestHeader
     }).catch((err) => {
+      setLoader(false)
       console.log(err)
     }).then((res) => {
+      setLoader(false)
       if(res?.data?.responseWrapper !== null){
         // console.log(JSON.stringify(res.data.responseWrapper[0]))
         setCoupons(res.data.responseWrapper)
@@ -68,6 +72,7 @@ export default function Coupon() {
 
   return (
     <>
+      <AlifCircularLoader open={loader}/>
       <TableContainer>
         <Table>
           <TableHead>

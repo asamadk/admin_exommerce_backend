@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,12 +13,14 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import AddProductModel from "../Components/AddProductModel";
 import { Box } from "@mui/system";
+import AlifCircularLoader from '../Components/AlifCircularProgress';
 
 
 import * as Constants from '../Helper/Constants'
 import * as Endpoint from '../Helper/Endpoint'
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import ViewProductModel from '../Components/ViewProductModel';
 
 const column = [
   'Image', 'Id', 'Name', 'Category', 'Price', 'Real Price', 'Available', 'More'
@@ -31,18 +33,23 @@ export default function Product() {
   const [products, setProducts] = useState([])
   const [singleProduct, setSingleProduct] = useState({})
   const [openProducts, setOpenProducts] = useState(false)
+  const [viewProducts, setViewProducts] = useState(false)
+  const [loader, setLoader] = useState(false)
   
   
   const history = useHistory()
   
   useEffect(() => {
+    setLoader(true)
     if (Constants.isLoggedIn() == false) {
       history.push('/login')
     }
     axios.get(Endpoint.getAllProducts(0, 30)).catch((err) => {
+      setLoader(false)
       console.log(err)
     }).then((res) => {
       //
+      setLoader(false)
       setProducts(res.data.responseWrapper)
       
       for(let product of res.data.responseWrapper){
@@ -51,10 +58,29 @@ export default function Product() {
       // console.log(JSON.stringify(res.data.responseWrapper[0]))
     })
   }, [])
+
+  const requestHeader = {
+    Authorization: `Bearer ${localStorage.getItem(Constants.TOKEN)}`
+
+  }
+
+  const deletingProducts = (event) => {
+    const productId = event?.currentTarget?.id
+    console.log(productId)
+    axios.delete(Endpoint.deleteProduct(productId), {
+      headers : requestHeader
+    }).then((res) =>{
+      console.log(res.data)
+    }).catch((err) =>{
+      console.log(err)
+    })
+    handleClose()
+  }
+
   
   const handleClick = (event) => {
-    console.log('Product id = ',event.currentTarget.id)
-    setAnchorEl(event.currentTarget)
+    console.log('Product id = ',event?.currentTarget?.id)
+    setAnchorEl(event?.currentTarget)
     for(let product of products){
       if(event.currentTarget.id == product?.product_id){
         // product.open = Boolean(event.currentTarget)
@@ -77,6 +103,18 @@ export default function Product() {
     handleClose();
   }
 
+  const viewProductDetails = (event) => {
+    for(let product of products){
+      if(event.currentTarget.id == product?.product_id){
+        // setOpenOrder(true);
+        console.log('click works')
+        setViewProducts(true)
+        setSingleProduct(product)
+      }
+    }
+    handleClose()
+  }
+
   const handleClose = () => {
     setAnchorEl(null);
     for(let product of products){
@@ -87,10 +125,12 @@ export default function Product() {
 
   const handleProductModalClose = () => {
     setOpenProducts(false)
+    setViewProducts(false)
   }
 
   return (
     <>
+    <AlifCircularLoader open={loader}/>
       <TableContainer>
         <Table>
           <TableHead>
@@ -113,7 +153,6 @@ export default function Product() {
                 <TableCell>₹{product.product_real_price}</TableCell>
                 <TableCell>{product?.avaialable?.toString()}</TableCell>
                 <TableCell>
-                  <div>
                     <Button
                       id={product?.product_id}
                       aria-controls={open ? 'basic-menu' : undefined}
@@ -132,12 +171,10 @@ export default function Product() {
                         'aria-labelledby': 'basic-button',
                       }}
                     >
-                      <MenuItem id={product.product_id} onClick={handleClose}>View</MenuItem>
+                      <MenuItem id={product.product_id} onClick={viewProductDetails}>View</MenuItem>
                       <MenuItem id={product.product_id} onClick={editProductDtetails}>Edit</MenuItem>
-                      <MenuItem id={product.product_id} onClick={handleClose}>Delete</MenuItem>
+                      <MenuItem id={product.product_id} onClick={deletingProducts}>Delete</MenuItem>
                     </Menu>
-                  </div>
-
                 </TableCell>
               </TableRow>
             ))}
@@ -145,7 +182,8 @@ export default function Product() {
         </Table>
       </TableContainer>
       <Box sx={{marginTop : '50px'}}>
-        {openProducts && <AddProductModel product={singleProduct}  parentCallback={handleProductModalClose} />}
+        {openProducts && <AddProductModel source={Constants.EDIT} product={singleProduct}  parentCallback={handleProductModalClose} />}
+        {viewProducts && <ViewProductModel product={singleProduct}  parentCallback={handleProductModalClose} />}
       </Box>
     </>
   )

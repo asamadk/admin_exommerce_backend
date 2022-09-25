@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import AppBar from "@mui/material/AppBar";
@@ -65,6 +65,25 @@ export default function AddCategoriesModel(props) {
   const [severity, setSeverity] = useState('error')
   const [show, setShow] = useState(false)
   const [message, setMessage] = useState('save Failed!')
+  const [modalHeader, setModalHeader] = useState(props?.source)
+
+  useEffect(() => {
+    axios.get(Endpoint.getAllCategories()).then((res) => {
+      populateCategory(props.cat)
+      console.log(res)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }, [])
+
+  const populateCategory = (cat) => {
+    if(cat == null) {
+      return;
+    }
+    // console.log(cat)
+    setCategoryname(cat.category_Name)
+    setCategoryimg(cat.category_image)
+  }
 
   const categoryName = (e) => {
     console.log(e.target.value)
@@ -135,7 +154,8 @@ export default function AddCategoriesModel(props) {
           <AppBar position="fixed">
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Add Categories
+                {modalHeader == Constants.ADD && 'Add Category'}
+                {modalHeader == Constants.EDIT && 'Edit Category'}
               </Typography>
               <IconButton
                 size="large"
@@ -151,8 +171,8 @@ export default function AddCategoriesModel(props) {
           </AppBar>
         </ThemeProvider>
         <Box sx={bannerMainContainer} >
-          <TextField onChange={(e) => { categoryName(e) }} fullWidth sx={inputStyle} id="outlined-basic" label="Category Name" variant="outlined" />
-          <TextField onChange={(e) => { categoryImg(e) }} fullWidth sx={inputStyle} id="outlined-basic" label="Category img" variant="outlined" />
+          <TextField value={categoryname || ''} onChange={(e) => { categoryName(e) }} fullWidth sx={inputStyle} id="outlined-basic" label="Category Name" variant="outlined" />
+          <TextField value={categoryimg || ''} onChange={(e) => { categoryImg(e) }} fullWidth sx={inputStyle} id="outlined-basic" label="Category img" variant="outlined" />
           <Button onClick={categoryDetails} sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
             Save
           </Button>

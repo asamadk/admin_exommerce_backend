@@ -15,7 +15,7 @@ import Button from '@mui/material/Button';
 import { color } from "@mui/system";
 import Stack from '@mui/material/Stack';
 import axios from "axios";
-
+import AlifCircularLoader from "../Components/AlifCircularProgress";
 
 const inputStyle = {
   marginTop: '15px',
@@ -31,16 +31,22 @@ const bannerMainContainer = {
 
 export default function Banners() {
 
+  const [loader, setLoader] = useState(false)
+
   // useEffect(() => {
+  //   setLoader(true)
   //   axios.get(Endpoint.getAllBanners).then(res => {
   //     console.log(res)
+  //     setLoader(false)
   //   }).catch(err => {
+  //     setLoader(false)
   //     console.log(err)
   //   })
   // },[])
 
   return (
     <>
+    <AlifCircularLoader open={loader} />
       <Table>
           <TableBody>
               <TableRow>

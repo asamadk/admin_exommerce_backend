@@ -46,6 +46,10 @@ export const postProducts = (catId) => {
     return `${BASE_URL}admin/product?catId=${catId}`
 }
 
+export const deleteProduct = (productId) => {
+    return `${BASE_URL}admin/product/${productId}`
+}
+
 export const deleteOrderById = (orderId) => {
     return `${BASE_URL}admin/order/${orderId}`
 }
