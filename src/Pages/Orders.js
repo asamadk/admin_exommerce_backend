@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -18,6 +18,10 @@ import axios from "axios";
 import AddOrderModel from "../Components/AddOrdersModel";
 import { Box } from "@mui/system";
 import AlifAlert from "../Components/Alert";
+import CircularProgress from '@mui/material/CircularProgress';
+import AlifCircularLoader from "../Components/AlifCircularProgress";
+import ViewOrderModel from "../Components/ViewOrderModel";
+
 
 const column = [
   "Id",
@@ -41,6 +45,10 @@ export default function Orders() {
   const [severity, setSeverity] = useState('error')
   const [show, setShow] = useState(false)
   const [message, setMessage] = useState('Something went wrong')
+  const [loader, setLoader] = useState(false)
+  const [reducerVavlue, forceUpdate] = useReducer(x => x + 1, 0)
+  const [viewOrderOpen, setViewOrderOpen] = useState(false)
+
 
   const history = useHistory()
 
@@ -50,6 +58,7 @@ export default function Orders() {
   }
 
   useEffect(() => {
+    setLoader(true)
     if (Constants.isLoggedIn() == false) {
       history.push('/Login')
     }
@@ -58,31 +67,32 @@ export default function Orders() {
       headers: requestHeader
     }).catch((err) => {
       console.log(err)
+      setLoader(false)
     }).then((res) => {
+      setLoader(false)
+      // forceUpdate()
+      // console.log(res?.data?.responseWrapper)
       if (res?.data?.responseWrapper !== null) {
         setOrders(res.data.responseWrapper);
       }
+      console.log(orders[0])
     })
 
-  }, [])
+  }, [reducerVavlue])
 
   const deletingOrders = (event) => {
-    
-    const orderId = event?.currentTarget.id
+
+    const orderId = event?.currentTarget?.id
     axios.delete(Endpoint.deleteOrderById(orderId), {
-      headers : requestHeader
+      headers: requestHeader
     }).then((res) => {
-      console.log(orders.length)
+      forceUpdate()
+      // console.log(orders.length)
       setSeverity('success')
       setShow(true)
       setMessage('Deleted Successfully')
-      orders.push( orders.filter(order => {
-        return order.orderId != orderId
-      })
-      )
-      console.log(orders.length)
       console.log(res.data)
-    }).catch((err) =>{
+    }).catch((err) => {
       console.log(err)
       setSeverity('error')
       setShow(true)
@@ -91,7 +101,7 @@ export default function Orders() {
 
     setTimeout(() => {
       setShow(false)
-    },2000)
+    }, 2000)
 
   }
 
@@ -101,19 +111,29 @@ export default function Orders() {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
 
-    for(let order of orders){
-      if(event.currentTarget.id == order?.orderId){
+    for (let order of orders) {
+      if (event.currentTarget.id == order?.orderId) {
         order.open = true
-      }else{
+      } else {
         order.open = false
       }
     }
   };
 
   const editOrderDtetails = (event) => {
-    for(let order of orders){
-      if(event.currentTarget.id == order?.orderId){
+    for (let order of orders) {
+      if (event.currentTarget.id == order?.orderId) {
         setOpenOrder(true);
+        setSingalOrder(order)
+      }
+    }
+    handleClose();
+  }
+
+  const viewOrderDetails = (event) => {
+    for (let order of orders) {
+      if (event.currentTarget.id == order?.orderId) {
+        setViewOrderOpen(true);
         setSingalOrder(order)
       }
     }
@@ -122,17 +142,19 @@ export default function Orders() {
 
   const handleClose = () => {
     setAnchorEl(null);
-    for(let order of orders){
+    for (let order of orders) {
       order.open = false
     }
   };
 
   const handleOrderModalClose = () => {
     setOpenOrder(false)
+    setViewOrderOpen(false)
   }
 
   return (
     <>
+      <AlifCircularLoader open={loader} />
       <TableContainer>
         <AlifAlert
           severity={severity}
@@ -188,7 +210,7 @@ export default function Orders() {
                       'aria-labelledby': 'basic-button',
                     }}
                   >
-                    <MenuItem id={order?.orderId} onClick={handleClose}>View</MenuItem>
+                    <MenuItem id={order?.orderId} onClick={viewOrderDetails}>View</MenuItem>
                     <MenuItem id={order?.orderId} onClick={editOrderDtetails}>Edit</MenuItem>
                     <MenuItem id={order?.orderId} onClick={deletingOrders}>Delete</MenuItem>
                     <MenuItem id={order?.orderId} onClick={handleClose}>Generate Bill</MenuItem>
@@ -199,8 +221,9 @@ export default function Orders() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box sx={{marginTop : '50px'}}>
-        {openOrder && <AddOrderModel order={singleOrder}  parentCallback={handleOrderModalClose} />}
+      <Box sx={{ marginTop: '50px' }}>
+        {openOrder && <AddOrderModel source={Constants.EDIT} order={singleOrder} parentCallback={handleOrderModalClose} />}
+        {viewOrderOpen && <ViewOrderModel source={Constants.VIEW} order={singleOrder} parentCallback={handleOrderModalClose} />}
       </Box>
     </>
   );

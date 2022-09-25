@@ -69,7 +69,7 @@ const addProductsMain = {
 
 export default function AddProductModel(props) {
 
-  const [productname, setProductname] = useState();
+  const [productname, setProductname] = useState('');
   const [productrealprice, setProductrealprice] = useState();
   const [productprice, setProductprice] = useState();
   const [weight, setWeight] = useState();
@@ -89,18 +89,19 @@ export default function AddProductModel(props) {
   const [fabricShine, setFabricShine] = useState();
   const [sizeFit, setSizeFit] = useState();
   const [washcare, setWashcare] = useState();
-  const [categoryId, setCategoryId] = useState();
+  const [categoryId, setCategoryId] = useState(230);
   const [loader, setLoader] = useState(false)
   const [severity, setSeverity] = useState('error')
   const [show, setShow] = useState(false)
   const [message, setMessage] = useState('save Failed!')
+  const [modalHeader, setModalHeader] = useState(props?.source)
 
 
   useEffect(() => {
     axios.get(Endpoint.getAllCategories()).then((res) => {
       setCategory(res?.data?.responseWrapper)
       populateProduct(props.product)
-      // console.log(JSON.parse(res?.data?.responseWrapper[0]))
+      console.log(res)
     }).catch((err) => {
       console.log(err)
     })
@@ -130,7 +131,7 @@ export default function AddProductModel(props) {
     setSizeFit(shortDesObj?.sizefit)
     setWashcare(shortDesObj?.washcare)
     setCategoryId(product?.categoryModel?.category_Id)
-    console.log(shortDesObj)
+    console.log(product?.quantity)
   }
 
   const productName = (e) => {
@@ -271,7 +272,6 @@ export default function AddProductModel(props) {
         handleClose()
       },2000)
     }).catch((err) => {
-      window.scrollTo(0,0)
       console.log(err)
       setShow(true)
       setSeverity('error')
@@ -294,7 +294,8 @@ export default function AddProductModel(props) {
           <AppBar position="fixed">
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Add Products
+                {modalHeader == Constants.ADD && 'Add Product'}
+                {modalHeader == Constants.EDIT && 'Edit Product'}
               </Typography>
               <IconButton
                 size="large"
@@ -322,7 +323,7 @@ export default function AddProductModel(props) {
             id="outlined-basic"
             label="Name"
             variant="outlined"
-            value={productname}
+            value={productname || ''}
           />
           <TextField
             onChange={(e) => { realPrice(e) }}
@@ -330,7 +331,7 @@ export default function AddProductModel(props) {
             id="outlined-basic"
             label="Real Price"
             variant="outlined"
-            value={productrealprice}
+            value={productrealprice || ''}
           />
           <TextField
             onChange={(e) => { price(e) }}
@@ -338,7 +339,7 @@ export default function AddProductModel(props) {
             id="outlined-basic"
             label="Price"
             variant="outlined"
-            value={productprice}
+            value={productprice || ''}
           />
           <TextField
             onChange={(e) => { productWeight(e) }}
@@ -346,7 +347,7 @@ export default function AddProductModel(props) {
             id="outlined-basic"
             label="Weight"
             variant="outlined"
-            value={weight}
+            value={weight || ''}
           />
           <TextField
             onChange={(e) => { productQuantity(e) }}
@@ -354,7 +355,7 @@ export default function AddProductModel(props) {
             id="outlined-basic"
             label="Quantity"
             variant="outlined"
-            value={quantity}
+            value={quantity || ''}
           />
           <Box>
             <FormControlLabel
@@ -377,7 +378,7 @@ export default function AddProductModel(props) {
               id="outlined-basic"
               label="Image url 1"
               variant="outlined"
-              value={imageurl1}
+              value={imageurl1 || ''}
             />
             <TextField
               onChange={(e) => { imageURL2(e) }}
@@ -385,14 +386,14 @@ export default function AddProductModel(props) {
               id="outlined-basic"
               label="Image url 2"
               variant="outlined"
-              value={imageurl2}
+              value={imageurl2 || ''}
             />
             <TextField
               onChange={(e) => { imageURL3(e) }}
               sx={inputStyle2}
               id="outlined-basic"
               label="Image url 3"
-              value={imageurl3}
+              value={imageurl3 || ''}
               variant="outlined"
             />
             <TextField
@@ -400,7 +401,7 @@ export default function AddProductModel(props) {
               sx={inputStyle2}
               id="outlined-basic"
               label="Image url 4"
-              value={imageurl4}
+              value={imageurl4 || ''}
               variant="outlined"
             />
           </Box>
@@ -417,7 +418,7 @@ export default function AddProductModel(props) {
               sx={inputStyle2}
               id="outlined-basic"
               label="product Quote"
-              value={productQuote}
+              value={productQuote || ''}
               variant="outlined"
             />
             <TextField
@@ -425,7 +426,7 @@ export default function AddProductModel(props) {
               sx={inputStyle2}
               id="outlined-basic"
               label="product composition"
-              value={productComposition}
+              value={productComposition || ''}
               variant="outlined"
             />
             <TextField
@@ -433,7 +434,7 @@ export default function AddProductModel(props) {
               sx={inputStyle2}
               id="outlined-basic"
               label="product description"
-              value={productDescription}
+              value={productDescription || ''}
               variant="outlined"
             />
           </Box>
@@ -450,7 +451,7 @@ export default function AddProductModel(props) {
               sx={inputStyle2}
               id="outlined-basic"
               label="product weave"
-              value={weave}
+              value={weave || ''}
               variant="outlined"
             />
             <TextField
@@ -458,7 +459,7 @@ export default function AddProductModel(props) {
               sx={inputStyle2}
               id="outlined-basic"
               label="product mill"
-              value={mill}
+              value={mill || ''}
               variant="outlined"
             />
             <TextField
@@ -466,7 +467,7 @@ export default function AddProductModel(props) {
               sx={inputStyle2}
               id="outlined-basic"
               label="product fabric shine"
-              value={fabricShine}
+              value={fabricShine || ''}
               variant="outlined"
             />
             <TextField
@@ -474,7 +475,7 @@ export default function AddProductModel(props) {
               sx={inputStyle2}
               id="outlined-basic"
               label="product sizefit"
-              value={sizeFit}
+              value={sizeFit || ''}
               variant="outlined"
             />
             <TextField
@@ -482,7 +483,7 @@ export default function AddProductModel(props) {
               sx={inputStyle2}
               id="outlined-basic"
               label="product washcare"
-              value={washcare}
+              value={washcare || ''}
               variant="outlined"
             />
           </Box>
@@ -497,7 +498,7 @@ export default function AddProductModel(props) {
             <Select
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
-              value={categoryId}
+              value={categoryId || ''}
               onChange={(e) => { handleCategoryChange(e) }}
             >
               {

@@ -21,6 +21,9 @@ export const ROLE_ADMIN = 'ROLE_ADMIN'
 
 export const OK = 200;
 
+export const EDIT = 'edit'
+export const VIEW = 'view'
+
 export const isLoggedIn = () => {
    return localStorage.getItem(TOKEN) != null &&  localStorage.getItem(TOKEN) != ''  
 }

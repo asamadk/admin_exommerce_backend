@@ -18,38 +18,38 @@ import AlifAlert from "./Alert";
 
 export default function AddCouponModel(props) {
 
-  const [couponname, setCouponname] = useState()
-  const [coupondiscount, setCoupondiscount] = useState()
-  const [maxdiscount, setMaxdiscount] = useState()
-  const [minpurchaseprice, setMinpurchaseprice] = useState()
-  const [expdate, setExpdate] = useState()
+  const [couponname, setCouponname] = useState('')
+  const [coupondiscount, setCoupondiscount] = useState('')
+  const [maxdiscount, setMaxdiscount] = useState('')
+  const [minpurchaseprice, setMinpurchaseprice] = useState('')
+  const [expdate, setExpdate] = useState('')
   const [severity, setSeverity] = useState('error');
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState('Something went wrong')
 
   const couponName = (e) => {
-    console.log(e.target.value)
-    setCouponname(e.target.value);
+    console.log(e?.currentTarget?.value)
+    setCouponname(e?.currentTarget?.value);
   }
 
   const couponDiscount = (e) => {
-    console.log(e.target.value)
-    setCoupondiscount(e.target.value);
+    console.log(e?.currentTarget?.value)
+    setCoupondiscount(e?.currentTarget?.value);
   }
 
   const maxDiscount = (e) => {
-    console.log(e.target.value)
-    setMaxdiscount(e.target.value)
+    console.log(e?.currentTarget?.value)
+    setMaxdiscount(e?.currentTarget?.value)
   }
 
   const minPurchasePrice = (e) => {
-    console.log(e.target.value)
-    setMinpurchaseprice(e.target.value)
+    console.log(e?.currentTarget?.value)
+    setMinpurchaseprice(e?.currentTarget?.value)
   }
 
   const expDate = (e) => {
-    console.log(e.target.value)
-    setExpdate(e.target.value)
+    console.log(e?.currentTarget?.value)
+    setExpdate(e?.currentTarget?.value)
   }
 
   const couponDetails = () => {
@@ -68,10 +68,10 @@ export default function AddCouponModel(props) {
     axios.post(Endpoint.postCoupons(), data, {
       headers: requestHeader
     }).then((res) => {
-      console.log(res.data)
+      console.log(res?.data)
       setSeverity('success')
       setShow(true)
-      setMessage('Banner saved successfully')
+      setMessage('coupon saved successfully')
       setTimeout(() => {
         setShow(false)
       }, 2000)
@@ -124,12 +124,12 @@ export default function AddCouponModel(props) {
           />
         </Box>
         <Box sx={addCouponsMain} >
-          <TextField onChange={(e) => { couponName(e) }} fullWidth sx={inputStyle} id="outlined-basic" label="Coupon Name" variant="outlined" />
+          <TextField onChange={(e) => { couponName(e) }} fullWidth sx={inputStyle} id="outlined-basic" label="Coupon Name" variant="outlined" value={couponname} />
           <Box>
-            <TextField onChange={(e) => { couponDiscount(e) }} sx={inputStyle2} id="outlined-basic" label="Discount Percentage" variant="outlined" />
-            <TextField onChange={(e) => { maxDiscount(e) }} sx={inputStyle2} id="outlined-basic" label="Max Discount" variant="outlined" />
-            <TextField onChange={(e) => { minPurchasePrice(e) }} sx={inputStyle2} id="outlined-basic" label="Minimum purchase price" variant="outlined" />
-            <TextField onChange={(e) => { expDate(e) }} sx={inputStyle2} id="outlined-basic" type={'date'} variant="outlined" />
+            <TextField onChange={(e) => { couponDiscount(e) }} sx={inputStyle2} id="outlined-basic" label="Discount Percentage" variant="outlined"  value={coupondiscount} />
+            <TextField onChange={(e) => { maxDiscount(e) }} sx={inputStyle2} id="outlined-basic" label="Max Discount" variant="outlined"  value={maxdiscount} />
+            <TextField onChange={(e) => { minPurchasePrice(e) }} sx={inputStyle2} id="outlined-basic" label="Minimum purchase price" variant="outlined"x value={minpurchaseprice} />
+            <TextField onChange={(e) => { expDate(e) }} sx={inputStyle2} id="outlined-basic" type={'date'} variant="outlined"  value={expdate} />
           </Box>
         </Box>
         <Button onClick={couponDetails} sx={saveButton} variant="contained" endIcon={<SaveIcon />}>

@@ -74,10 +74,10 @@ const addOrderMain = {
 
 export default function AddOrderModel(props) {
 
-  const [totalPrice, setTotalPrice] = useState();
-  const [orderDate, setOrderDate] = useState();
-  const [arrivaldate, setArrivaldate] = useState();
-  const [orderTrackingNum, setOrderTrackingNum] = useState();
+  const [totalPrice, setTotalPrice] = useState(1399);
+  const [orderDate, setOrderDate] = useState('');
+  const [arrivaldate, setArrivaldate] = useState('');
+  const [orderTrackingNum, setOrderTrackingNum] = useState(1);
   const [category, setCategory] = useState([]);
   // const [couponname, setCouponname] = useState([]);
   const [paid, setPaid] = useState(false);
@@ -89,6 +89,7 @@ export default function AddOrderModel(props) {
   const [severity, setSeverity] = useState('error')
   const [show, setShow] = useState(false)
   const [message, setMessage] = useState('Something went wrong')
+  const [modalHeader, setModalHeader] = useState(props?.source)
 
   useEffect(() => {
     fetchCategories()
@@ -191,13 +192,13 @@ export default function AddOrderModel(props) {
     axios.post(Endpoint.postOrders(), data,{
       headers : requestHeader
     }).then((res) => {
-      // console.log(res.data)
+      console.log('order data for view',res.data)
       setLoader(false)
       setSeverity('success')
       setShow(true)
       setMessage('Saved Successfully')
     }).catch((err) => {
-      // console.log(err)
+      console.log(err)
       setLoader(false)
       setShow(true)
       setMessage('Something went wrong')
@@ -232,7 +233,8 @@ export default function AddOrderModel(props) {
           <AppBar position="fixed">
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Add Orders
+                {modalHeader == Constants.ADD && 'Add Order'}
+                {modalHeader == Constants.EDIT && 'Edit Order'}
               </Typography>
               <IconButton
                 size="large"

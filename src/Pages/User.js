@@ -16,15 +16,18 @@ import Switch from "@mui/material/Switch";
 import Paper from "@mui/material/Paper";
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+import AlifCircularLoader from "../Components/AlifCircularProgress";
 
 
 export default function User() {
 
   const [users, setUsers] = useState([])
   const history = useHistory()
+  const [loader, setLoader] = useState(false)
 
 
   useEffect(() => {
+    setLoader(true)
     if (Constants.isLoggedIn == false) {
       history.push('/login');
     }
@@ -37,7 +40,9 @@ export default function User() {
       headers: requestHeader
     }).catch((err) => {
       console.log(err)
+      setLoader(false)
     }).then((res) => {
+      setLoader(false)
       if (res?.data?.responseWrapper !== null) {
         setUsers(res.data.responseWrapper)
       }
@@ -50,6 +55,7 @@ export default function User() {
 
   return (
     <>
+    <AlifCircularLoader open={loader} />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="caption table">
           <TableHead>
