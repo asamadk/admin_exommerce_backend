@@ -1,6 +1,8 @@
-// export const BASE_URL = 'http://3.111.254.142:8080/';
+export const BASE_URL = 'http://3.111.254.142:8080/';
 
-const BASE_URL = 'https://alif-ecommerce.herokuapp.com/';
+// export const BASE_URL = 'http://localhost:8080/';
+
+// const BASE_URL = 'https://alif-ecommerce.herokuapp.com/';
 
 export const getLoginURL = () => {
     return `${BASE_URL}login`
@@ -10,8 +12,8 @@ export const getAllOrders = () => {
     return `${BASE_URL}admin/orders`
 }
 
-export const postOrders = () => {
-    return `${BASE_URL}admin/order`
+export const postOrders = (userId) => {
+    return `${BASE_URL}admin/order?userId=${userId}`
 }
 
 export const getAllCoupons = () => {
@@ -59,5 +61,5 @@ export const postAllBanners = () => {
 }
 
 export const getAllBanners = () => {
-    // return `${BASE_URL}banners`
+    return `${BASE_URL}banner`
 }

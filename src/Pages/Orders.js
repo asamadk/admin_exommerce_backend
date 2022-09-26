@@ -21,6 +21,7 @@ import AlifAlert from "../Components/Alert";
 import CircularProgress from '@mui/material/CircularProgress';
 import AlifCircularLoader from "../Components/AlifCircularProgress";
 import ViewOrderModel from "../Components/ViewOrderModel";
+import OrderBill from "../Components/OrderBill";
 
 
 const column = [
@@ -83,11 +84,11 @@ export default function Orders() {
   const deletingOrders = (event) => {
 
     const orderId = event?.currentTarget?.id
+    window.scrollTo(0,0);
     axios.delete(Endpoint.deleteOrderById(orderId), {
       headers: requestHeader
     }).then((res) => {
       forceUpdate()
-      // console.log(orders.length)
       setSeverity('success')
       setShow(true)
       setMessage('Deleted Successfully')
@@ -224,6 +225,7 @@ export default function Orders() {
       <Box sx={{ marginTop: '50px' }}>
         {openOrder && <AddOrderModel source={Constants.EDIT} order={singleOrder} parentCallback={handleOrderModalClose} />}
         {viewOrderOpen && <ViewOrderModel source={Constants.VIEW} order={singleOrder} parentCallback={handleOrderModalClose} />}
+        {true && <OrderBill/>}
       </Box>
     </>
   );

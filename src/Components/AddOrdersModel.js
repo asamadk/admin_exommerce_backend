@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import AppBar from "@mui/material/AppBar";
@@ -10,26 +10,35 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import CloseIcon from "@mui/icons-material/Close";
-import Button from '@mui/material/Button';
-import SaveIcon from '@mui/icons-material/Save';
+import Button from "@mui/material/Button";
+import SaveIcon from "@mui/icons-material/Save";
 import Typography from "@mui/material/Typography";
-import * as Endpoint from '../Helper/Endpoint';
-import * as Constants from '../Helper/Constants';
-import MenuItem from '@mui/material/MenuItem';
+import * as Endpoint from "../Helper/Endpoint";
+import * as Constants from "../Helper/Constants";
+import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
 import AlifCircularLoader from "./AlifCircularProgress";
 import AlifAlert from "./Alert";
+import ImageSelectComponent from "./ImageSelectComponent";
 
-const paymentMode = ['COD', 'online'];
-const orderStat = ['Pending payment', 'Failed', 'Processing', 'In Transit', 'Shipped', 'Delivered', 'Placed'];
+const paymentMode = ["COD", "online"];
+const orderStat = [
+  "Pending payment",
+  "Failed",
+  "Processing",
+  "In Transit",
+  "Shipped",
+  "Delivered",
+  "Placed",
+];
 
 const saveButton = {
-  marginTop : '15px',
-  backgroundColor : '#673ab7'
-}
+  marginTop: "15px",
+  backgroundColor: "#673ab7",
+};
 
 const style = {
-  marginTop : '30px',
+  marginTop: "30px",
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -40,7 +49,7 @@ const style = {
   border: "0.5px solid #000",
   boxShadow: 24,
   p: 4,
-  overflowY : 'scroll'
+  overflowY: "scroll",
 };
 
 const inputStyle = {
@@ -73,147 +82,182 @@ const addOrderMain = {
 };
 
 export default function AddOrderModel(props) {
-
-  const [totalPrice, setTotalPrice] = useState(1399);
-  const [orderDate, setOrderDate] = useState('');
-  const [arrivaldate, setArrivaldate] = useState('');
+  const [totalPrice, setTotalPrice] = useState();
+  const [orderDate, setOrderDate] = useState("");
+  const [arrivaldate, setArrivaldate] = useState("");
   const [orderTrackingNum, setOrderTrackingNum] = useState(1);
   const [category, setCategory] = useState([]);
-  // const [couponname, setCouponname] = useState([]);
+  const [productList, setProductList] = useState([]);
   const [paid, setPaid] = useState(false);
-  const [payMode, setPayMode] = useState('COD')
-  const [orderStatus, setOrderStatus] = useState('');
-  const [coupon, setCoupon] = useState([])
-  const [orderCoupon, setOrderCoupon] = useState('')
+  const [payMode, setPayMode] = useState("COD");
+  const [orderStatus, setOrderStatus] = useState("Placed");
+  const [coupon, setCoupon] = useState([]);
+  const [orderCoupon, setOrderCoupon] = useState("");
   const [loader, setLoader] = useState(false);
-  const [severity, setSeverity] = useState('error')
-  const [show, setShow] = useState(false)
-  const [message, setMessage] = useState('Something went wrong')
-  const [modalHeader, setModalHeader] = useState(props?.source)
+  const [severity, setSeverity] = useState("error");
+  const [show, setShow] = useState(false);
+  const [orderProductList, setOrderPRoductList] = useState([]);
+  const [message, setMessage] = useState("Something went wrong");
+  const [modalHeader, setModalHeader] = useState(props?.source);
 
   useEffect(() => {
-    fetchCategories()
-    fetchCoupons()
-    populateOrder(props.order)
-    console.log('ADD ORDER MODAL = ',props.order)
-  }, [])
+    setLoader(true);
+    fetchProducts();
+    fetchCategories();
+    fetchCoupons();
+    populateOrder(props.order);
+  }, []);
 
-  const populateOrder =(order) => {
-    if(order == null){
+  const fetchProducts = async () => {
+    const res = await axios.get(Endpoint.getAllProducts(0, 30)).catch((err) => {
+      console.log(`Error is ${err}`);
+      setLoader(false);
+    });
+    setLoader(false);
+    if (res == null) return;
+    setProductList(res.data?.responseWrapper);
+  };
+
+  const populateOrder = (order) => {
+    if (order == null) {
       return;
     }
-    setOrderDate(new Date(order?.orderDate).toISOString().split('T')[0])
-    setArrivaldate(new Date(order?.expectedArrivalDate).toISOString().split('T')[0])
-    setPaid(order?.paid)
-    setOrderStatus(order?.orderStatusString)
-    setPayMode(order?.paymentMode)
-    setTotalPrice(order?.price)
-    setOrderCoupon(order?.couponName)
-    console.log(order)
-  }
+    setOrderDate(new Date(order?.orderDate).toISOString().split("T")[0]);
+    setArrivaldate(
+      new Date(order?.expectedArrivalDate).toISOString().split("T")[0]
+    );
+    setPaid(order?.paid);
+    setOrderStatus(order?.orderStatusString);
+    setPayMode(order?.paymentMode);
+    setTotalPrice(order?.price);
+    setOrderCoupon(order?.couponName);
+  };
 
   const fetchCategories = () => {
-    axios.get(Endpoint.getAllCategories()).then((res) => {
-      setCategory(res?.data?.responseWrapper)
-      // console.log(JSON.stringify(res?.data?.responseWrapper[0]))
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
+    axios
+      .get(Endpoint.getAllCategories())
+      .then((res) => {
+        setCategory(res?.data?.responseWrapper);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const fetchCoupons = () => {
-    axios.get(Endpoint.getAllCoupons()).then((res) => {
-      // console.log(JSON.stringify(res?.data?.responseWrapper[0]))
-      setCoupon(res?.data?.responseWrapper)
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
+    axios
+      .get(Endpoint.getAllCoupons())
+      .then((res) => {
+        setCoupon(res?.data?.responseWrapper);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const trackingNum = (e) => {
-    console.log(e.target.value)
-    setOrderTrackingNum(e.target.value)
-  }
+    console.log(e.target.value);
+    setOrderTrackingNum(e.target.value);
+  };
 
   const orderdate = (e) => {
-    console.log(e.target.value)
-    setOrderDate(e.target.value)
-  }
+    console.log(e.target.value);
+    setOrderDate(e.target.value);
+  };
 
   const arrivalDate = (e) => {
-    console.log(e.target.value)
-    setArrivaldate(e.target.value)
-  }
+    console.log(e.target.value);
+    setArrivaldate(e.target.value);
+  };
 
   const totalprice = (e) => {
-    console.log(e.target.value)
-    setTotalPrice(e.target.value)
-  }
-
-  // const couponName = (e) => {
-  //   console.log(e.target.value)
-  //   setCouponname(e.target.value)
-  // }
+    console.log(e.target.value);
+    setTotalPrice(e.target.value);
+  };
 
   const paidOrNot = (e) => {
-    console.log(e.target.checked)
-    setPaid(e.target.checked)
-  }
+    console.log(e.target.checked);
+    setPaid(e.target.checked);
+  };
 
   const handleCoupons = (e) => {
-    console.log(e.target.value)
-    setOrderCoupon(e.target.value)
-  }
+    console.log(e.target.value);
+    setOrderCoupon(e.target.value);
+  };
 
-  const [categories, setCategories] = React.useState('');
+  const [categories, setCategories] = React.useState("");
 
   const requestHeader = {
-    Authorization: `Bearer ${localStorage.getItem(Constants.TOKEN)}`
-  }
+    Authorization: `Bearer ${localStorage.getItem(Constants.TOKEN)}`,
+  };
 
   const orderDetails = () => {
     const data = {
-      'price' : totalPrice,
-      'orderDate' : orderDate , 
-      'orderTrackingNumber' : orderTrackingNum , 
-      'orderStatusString' : orderStatus , 
-      'expectedArrivalDate' : arrivaldate , 
-      'razorpay_order_id' : '' , 
-      'couponName' : orderCoupon ,
-      'paymentMode' : payMode , 
-      'orderSource' : 'External' , 
-      'paid' : paid.toString() , 
-      'userModel.user_id' : '142'
-      
-    }
-    console.log(data)
-    setLoader(true)
+      price: totalPrice,
+      orderDate: orderDate,
+      orderTrackingNumber: orderTrackingNum,
+      orderStatusString: orderStatus,
+      expectedArrivalDate: arrivaldate,
+      razorpay_order_id: "",
+      couponName: orderCoupon,
+      paymentMode: payMode,
+      orderSource: "External",
+      paid: paid.toString(),
+      productModelList : orderProductList
+    };
 
-    axios.post(Endpoint.postOrders(), data,{
-      headers : requestHeader
-    }).then((res) => {
-      console.log('order data for view',res.data)
-      setLoader(false)
-      setSeverity('success')
-      setShow(true)
-      setMessage('Saved Successfully')
-    }).catch((err) => {
-      console.log(err)
-      setLoader(false)
-      setShow(true)
-      setMessage('Something went wrong')
-      setSeverity('error')
-    })
+    setLoader(true);
+
+    axios
+      .post(Endpoint.postOrders(142), data, {
+        headers: requestHeader,
+      })
+      .then((res) => {
+        console.log("order data for view", res.data);
+        setLoader(false);
+        setSeverity("success");
+        setShow(true);
+        setMessage("Saved Successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoader(false);
+        setShow(true);
+        setMessage("Something went wrong");
+        setSeverity("error");
+      });
 
     setTimeout(() => {
-      handleClose()
-    }, 2000)
-
-  }
+      handleClose();
+    }, 2000);
+  };
 
   const handleClose = () => {
     props.parentCallback();
   };
+
+  const handleProductSelection = (data) => {
+    console.log('handleProductSelection data = ',data);
+    let productIdSet = new Set();
+    data.forEach((d) => {
+      productIdSet.add(parseInt(d));
+    })
+    
+    console.log('productIdSet = ',productIdSet)
+    
+    let temp = [];
+    productList.forEach(pro => {
+      if(productIdSet.has(pro.product_id)){
+        console.log('HAS TRUE')
+        temp.push(pro);
+      }
+    })
+    if(temp.length > 0){
+      setOrderPRoductList(temp);
+    }
+    console.log('handleProductSelection temp = ',temp);
+  }
+
   return (
     <Modal
       open={true}
@@ -221,20 +265,16 @@ export default function AddOrderModel(props) {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Box style={{marginTop : '50px'}}>
-          <AlifAlert
-            severity = {severity}
-            show = {show}
-            message = {message}
-          />
+        <Box style={{ marginTop: "50px" }}>
+          <AlifAlert severity={severity} show={show} message={message} />
         </Box>
-        <AlifCircularLoader open={loader}/>
+        <AlifCircularLoader open={loader} />
         <ThemeProvider theme={darkTheme}>
           <AppBar position="fixed">
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                {modalHeader == Constants.ADD && 'Add Order'}
-                {modalHeader == Constants.EDIT && 'Edit Order'}
+                {modalHeader == Constants.ADD && "Add Order"}
+                {modalHeader == Constants.EDIT && "Edit Order"}
               </Typography>
               <IconButton
                 size="large"
@@ -259,7 +299,9 @@ export default function AddOrderModel(props) {
               Dates
             </Typography>
             <TextField
-            onChange={(e) => {orderdate(e)}}
+              onChange={(e) => {
+                orderdate(e);
+              }}
               sx={inputStyle2}
               id="outlined-basic"
               type={"date"}
@@ -268,7 +310,9 @@ export default function AddOrderModel(props) {
               helperText="Order date"
             />
             <TextField
-              onChange={(e) => {arrivalDate(e)}}
+              onChange={(e) => {
+                arrivalDate(e);
+              }}
               sx={inputStyle2}
               id="outlined-basic"
               type={"date"}
@@ -279,23 +323,31 @@ export default function AddOrderModel(props) {
           </Box>
           <Box>
             <FormControlLabel
-              control={<Switch onChange={(e) => {paidOrNot(e)}} checked={paid} />}
-              label="Paid" value={paid}
+              control={
+                <Switch
+                  onChange={(e) => {
+                    paidOrNot(e);
+                  }}
+                  checked={paid}
+                />
+              }
+              label="Paid"
+              value={paid}
             />
           </Box>
           <Box sx={boxContainer}>
-          <Typography>Order status</Typography>
+            <Typography>Order status</Typography>
             <Select
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
               label="Order status"
               value={orderStatus}
               onChange={(e) => setOrderStatus(e.target.value)}
-              >
-                {orderStat.map((status) => {
-                return <MenuItem value={status}>{status}</MenuItem>
+            >
+              {orderStat.map((status) => {
+                return <MenuItem value={status}>{status}</MenuItem>;
               })}
-              </Select>
+            </Select>
           </Box>
 
           <Box sx={boxContainer}>
@@ -308,13 +360,15 @@ export default function AddOrderModel(props) {
               onChange={(e) => setPayMode(e.target.value)}
             >
               {paymentMode.map((payment) => {
-                return <MenuItem value={payment}>{payment}</MenuItem>
+                return <MenuItem value={payment}>{payment}</MenuItem>;
               })}
             </Select>
           </Box>
           <Box>
-          <TextField
-              onChange={(e) => {totalprice(e)}}
+            <TextField
+              onChange={(e) => {
+                totalprice(e);
+              }}
               sx={inputStyle2}
               id="outlined-basic"
               variant="outlined"
@@ -323,7 +377,7 @@ export default function AddOrderModel(props) {
             />
           </Box>
           <Box sx={boxContainer}>
-          <Typography>Coupon</Typography>
+            <Typography>Coupon</Typography>
             <Select
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
@@ -331,13 +385,23 @@ export default function AddOrderModel(props) {
               value={orderCoupon}
               onChange={(e) => handleCoupons(e)}
             >
-            {coupon.map((coup) => {
-                return <MenuItem value={coup.couponName}>{coup.couponName}</MenuItem>
+              {coupon.map((coup) => {
+                return (
+                  <MenuItem value={coup.couponName}>{coup.couponName}</MenuItem>
+                );
               })}
-              </Select>
+            </Select>
+          </Box>
+          <Box sx={boxContainer}>
+            <ImageSelectComponent parentCallback={(data) => handleProductSelection(data)}  products={productList} />
           </Box>
         </Box>
-        <Button onClick={orderDetails} sx={saveButton} variant="contained" endIcon={<SaveIcon />}>
+        <Button
+          onClick={orderDetails}
+          sx={saveButton}
+          variant="contained"
+          endIcon={<SaveIcon />}
+        >
           Save
         </Button>
       </Box>

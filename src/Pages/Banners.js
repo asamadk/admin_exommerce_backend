@@ -32,17 +32,21 @@ const bannerMainContainer = {
 export default function Banners() {
 
   const [loader, setLoader] = useState(false)
+  const [banner,setBanner] = useState({});
 
-  // useEffect(() => {
-  //   setLoader(true)
-  //   axios.get(Endpoint.getAllBanners).then(res => {
-  //     console.log(res)
-  //     setLoader(false)
-  //   }).catch(err => {
-  //     setLoader(false)
-  //     console.log(err)
-  //   })
-  // },[])
+  useEffect(() => {
+    setLoader(true)
+    axios.get(Endpoint.getAllBanners()).then(res => {
+      if(res.data?.responseWrapper != null && res.data?.responseWrapper.length > 0){
+        console.log(res.data?.responseWrapper[0]);
+        setBanner(res.data?.responseWrapper[0])
+      }
+      setLoader(false)
+    }).catch(err => {
+      setLoader(false)
+      console.log(err)
+    })
+  },[])
 
   return (
     <>
@@ -50,40 +54,46 @@ export default function Banners() {
       <Table>
           <TableBody>
               <TableRow>
-                <TableCell><Box style={{border : '1px black solid', height : '50px'}}></Box></TableCell>
-                <TableCell label='Banner 1' component="th" scope="row"><TextField fullWidth></TextField></TableCell>
+                <TableCell><Box style={{border : '1px black solid', height : '50px'}}><img src={banner?.bannerimg1} /></Box></TableCell>
+                <TableCell label='Banner 1' component="th" scope="row"><TextField value={banner?.bannerimg1} fullWidth></TextField></TableCell>
                 <TableCell><Button sx={{backgroundColor : '#673ab7'}} variant="contained">Edit</Button></TableCell>
               </TableRow>
-              {/* <TableRow>
-              <TableCell><Box style={{border : '1px black solid', height : '50px'}}></Box></TableCell>
-                <TableCell component="th" scope="row"><TextField fullWidth></TextField></TableCell>
-                <TableCell><Button sx={{backgroundColor : '#673ab7'}} variant="contained">Edit</Button></TableCell>
-              </TableRow>
+
               <TableRow>
-              <TableCell><Box style={{border : '1px black solid', height : '50px'}}></Box></TableCell>
-                <TableCell component="th" scope="row"><TextField fullWidth></TextField></TableCell>
+                <TableCell><Box style={{border : '1px black solid', height : '50px'}}><img src={banner?.bannerimg2} /></Box></TableCell>
+                <TableCell label='Banner 1' component="th" scope="row"><TextField value={banner?.bannerimg2} fullWidth></TextField></TableCell>
                 <TableCell><Button sx={{backgroundColor : '#673ab7'}} variant="contained">Edit</Button></TableCell>
               </TableRow>
+
               <TableRow>
-              <TableCell><Box style={{border : '1px black solid', height : '50px'}}></Box></TableCell>
-                <TableCell component="th" scope="row"><TextField fullWidth></TextField></TableCell>
+                <TableCell><Box style={{border : '1px black solid', height : '50px'}}><img src={banner?.bannerimg3} /></Box></TableCell>
+                <TableCell label='Banner 1' component="th" scope="row"><TextField value={banner?.bannerimg3} fullWidth></TextField></TableCell>
                 <TableCell><Button sx={{backgroundColor : '#673ab7'}} variant="contained">Edit</Button></TableCell>
               </TableRow>
+
               <TableRow>
-                <TableCell><Box style={{border : '1px black solid', height : '50px'}}></Box></TableCell>
-                <TableCell component="th" scope="row"><TextField fullWidth></TextField></TableCell>
+                <TableCell><Box style={{border : '1px black solid', height : '50px'}}><img src={banner?.bannerimg4} /></Box></TableCell>
+                <TableCell label='Banner 1' component="th" scope="row"><TextField value={banner?.bannerimg4} fullWidth></TextField></TableCell>
                 <TableCell><Button sx={{backgroundColor : '#673ab7'}} variant="contained">Edit</Button></TableCell>
               </TableRow>
+
               <TableRow>
-                <TableCell><Box style={{border : '1px black solid', height : '50px'}}></Box></TableCell>
-                <TableCell component="th" scope="row"><TextField fullWidth></TextField></TableCell>
+                <TableCell><Box style={{border : '1px black solid', height : '50px'}}><img src={banner?.bannerimg5} /></Box></TableCell>
+                <TableCell label='Banner 1' component="th" scope="row"><TextField value={banner?.bannerimg5} fullWidth></TextField></TableCell>
                 <TableCell><Button sx={{backgroundColor : '#673ab7'}} variant="contained">Edit</Button></TableCell>
               </TableRow>
+
               <TableRow>
-                <TableCell><Box style={{border : '1px black solid', height : '50px'}}></Box></TableCell>
-                <TableCell component="th" scope="row"><TextField fullWidth></TextField></TableCell>
+                <TableCell><Box style={{border : '1px black solid', height : '50px'}}><img src={banner?.bannerimg6} /></Box></TableCell>
+                <TableCell label='Banner 1' component="th" scope="row"><TextField value={banner?.bannerimg6} fullWidth></TextField></TableCell>
                 <TableCell><Button sx={{backgroundColor : '#673ab7'}} variant="contained">Edit</Button></TableCell>
-              </TableRow> */}
+              </TableRow>
+
+              <TableRow>
+                <TableCell><Box style={{border : '1px black solid', height : '50px'}}><img src={banner?.bannerimg7} /></Box></TableCell>
+                <TableCell label='Banner 1' component="th" scope="row"><TextField value={banner?.bannerimg7} fullWidth></TextField></TableCell>
+                <TableCell><Button sx={{backgroundColor : '#673ab7'}} variant="contained">Edit</Button></TableCell>
+              </TableRow>
           </TableBody>
         </Table>
     </>
