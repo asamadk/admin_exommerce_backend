@@ -78,9 +78,8 @@ export default function AddProductModel(props) {
   const [imageurl2, setImageurl2] = useState();
   const [imageurl3, setImageurl3] = useState();
   const [imageurl4, setImageurl4] = useState();
-  const [productlongDesc, setProductlongDesc] = useState();
-  const [productSmallDesc, setProductSmallDesc] = useState();
   const [category, setCategory] = useState([]);
+  const [categories, setCategories] = useState('');
   const [productQuote, setProductQuote] = useState()
   const [productComposition, setProductComposition] = useState()
   const [productDescription, setProductDescription] = useState()
@@ -219,8 +218,6 @@ export default function AddProductModel(props) {
     setWashcare(e.target.value)
   }
 
-  const [categories, setCategories] = React.useState('');
-
   const handleClose = () => {
     props.parentCallback();
   };
@@ -235,16 +232,27 @@ export default function AddProductModel(props) {
   }
 
   const productDetails = () => {
+    let catTemp = {}
+    category.forEach(cat => {
+      if(cat.category_Id === categories){
+        catTemp = cat;
+        return;
+      }else{
+        catTemp = cat;
+      }
+    })
+
     const data = {
       'product_name': productname,
-      'product_real_price': productrealprice,
-      'product_price': productprice,
+      'product_real_price': productprice,
+      'product_price': productrealprice,
       'product_weight': weight,
       'quantity': quantity,
       'product_img1': imageurl1,
       'product_img2': imageurl2,
       'product_img3': imageurl3,
       'product_img4': imageurl4,
+      'categoryModel' : catTemp,
       'product_long_Desc': JSON.stringify({
         'productQuote': productQuote,
         'composition': productComposition,
@@ -259,7 +267,7 @@ export default function AddProductModel(props) {
 
       })
     }
-    console.log(data)
+    console.log('PRODUCT = ',data)
 
     axios.post(Endpoint.postProducts(categories), data, {
       headers: requestHeader

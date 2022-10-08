@@ -4,6 +4,7 @@ import * as Constants from "./Helper/Constants";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import NavbarTop from "./Components/NavbarTop";
 import Login from "./Pages/Login";
+import OrderBill from "./Components/OrderBill";
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
         </Route>
         <Route path="/login">
           <Login />
+        </Route>
+        <Route path='/order/:id'>
+          <OrderBill/>
         </Route>
       </Switch>
     </BrowserRouter>

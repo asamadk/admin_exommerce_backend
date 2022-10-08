@@ -18,6 +18,7 @@ import AddOrderModel from "../Components/AddOrdersModel";
 import AddBannerModel from "../Components/AddBannerModel";
 import AddSizeOptionModel from "../Components/AddSizeOptionModel";
 import AddCategoriesModel from "../Components/AddCategoriesModel";
+import AddUsers from "../Components/AddUsers";
 
 
 let addItems = [
@@ -27,6 +28,7 @@ let addItems = [
   "Banner",
   "Size Option",
   "Categories",
+  "Users"
 ];
 
 export default function AddData() {
@@ -34,6 +36,7 @@ export default function AddData() {
   const [couponModal, setCouponModal] = useState(false)
   const [orderModal, setOrderModal] = useState(false)
   const [bannerModal, setBannerModal] = useState(false)
+  const [userModal, setUserModal] = useState(false);
   const [sizeOptionModal, setSizeOptionModal] = useState(false)
   const [categoriesModal, setCategoriesModal] = useState(false)
 
@@ -53,6 +56,8 @@ export default function AddData() {
       setSizeOptionModal(true);
     }else if(text === Constants.ADD_CATEGORIES) {
       setCategoriesModal(true);
+    }else if(text === Constants.ADD_USERS){
+      setUserModal(true);
     }
   };
 
@@ -119,6 +124,7 @@ export default function AddData() {
         {bannerModal && <AddBannerModel source={Constants.ADD} parentCallback={handleBannerModalClose} />}
         {sizeOptionModal && <AddSizeOptionModel source={Constants.ADD} parentCallback={handleSizeOptionModalClose} />}
         {categoriesModal && <AddCategoriesModel source={Constants.ADD} parentCallback={handleCategoriesModalClose} />}
+        {userModal && <AddUsers/>}
       </Box>
     </>
   );

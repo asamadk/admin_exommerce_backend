@@ -14,6 +14,7 @@ export const ADD_PRODUCTS = 'Products'
 export const ADD_COUPONS = 'Coupons'
 export const ADD_ORDERS = 'Orders'
 export const ADD_BANNER = 'Banner'
+export const ADD_USERS = 'Users'
 export const ADD_SIZE_OPTION = 'Size Option'
 export const ADD_CATEGORIES = 'Categories'
 
