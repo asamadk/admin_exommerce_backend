@@ -1,41 +1,42 @@
 import React, { useEffect, useReducer, useState } from "react";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageList from "@mui/material/ImageList";
-import { Button, Checkbox } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
 export default function ImageSelectComponent(props) {
+  const [products, setProducts] = useState([]);
+  const [rerender, setRerender] = useState(false);
 
-  const [productListIds, setProductIds] = useState([]);
-
-  const handleImageClick = (e) => {
-    const productId = e.target.id;
-    const isChecked = e.target.checked;
-    if (isChecked === true) {
-      addProductToOrder(productId);
-    } else {
-      removeProductFromOrder(productId);
-    }
-  };
-
-  const addProductToOrder = (productId) => {
-    productListIds.push(productId);
-    console.log('addProductToOrder',productListIds)
-  };
-
-  const removeProductFromOrder = (productId) => {
-    console.log(productId + " : removeProductFromOrder");
-    let temp = productListIds.filter(proId => {
-      return proId != productId
-    });
-
-    console.log('TEMP',temp)
-    setProductIds(temp);
-  };
+  useEffect(() => {
+    setProducts(props.products);
+  }, [rerender]);
 
   const saveProductst = () => {
-    props.parentCallback(productListIds);
-  }
+    let data = props.products;
+    let response = data.filter((data) => {
+      return data.count > 0;
+    });
+    props.parentCallback(response);
+  };
+
+  const handleIncrement = (event, type) => {
+    let prId = event.target.id;
+    for (let i = 0; i < props.products.length; i++) {
+      if (props.products[i].product_id == prId) {
+        let temp = props.products[i].count;
+        if (temp == null) {
+          temp = parseInt(0);
+        }
+        setRerender(!rerender);
+        if (type === "incr") {
+          props.products[i].count = parseInt(temp) + 1;
+        } else {
+          props.products[i].count = parseInt(temp) - 1;
+        }
+      }
+    }
+  };
 
   return (
     <>
@@ -49,18 +50,63 @@ export default function ImageSelectComponent(props) {
               alt={item.product_name}
               loading="lazy"
             />
-            <Checkbox id={item.product_id} onClick={handleImageClick} />
+            <Box style={stepperStye}>
+              <Button
+                id={item.product_id}
+                variant="outlined"
+                sx={stepperButton}
+                onClick={(e) => handleIncrement(e, "decr")}
+              >
+                -
+              </Button>
+              <Typography sx={textStyle}>{item.count}</Typography>
+              <Button
+                id={item.product_id}
+                sx={stepperButton}
+                variant="outlined"
+                onClick={(e) => handleIncrement(e, "incr")}
+              >
+                +
+              </Button>
+            </Box>
           </ImageListItem>
         ))}
       </ImageList>
       <Box style={buttonContainerStyle}>
-        <Button variant="contained" sx={{backgroundColor: "#673ab7",}} onClick={saveProductst} >Add Products</Button>
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: "#673ab7" }}
+          onClick={saveProductst}
+        >
+          Add Products
+        </Button>
       </Box>
     </>
   );
 }
 
+const textStyle = {
+  marginRight: "5px",
+  marginLeft: "5px",
+  color: "gray",
+};
+
+const stepperButton = {
+  padding: 0,
+  height: 20,
+  borderRadius: "3px",
+  marginTop: "2px",
+};
+
+const stepperStye = {
+  padding: 5,
+  margin: "10px auto",
+  border: "0.5px black solid",
+  borderRadius: "3px",
+  display: "flex",
+};
+
 const buttonContainerStyle = {
-  margin: '0 auto',
-  width: 'fit-content'
-}
+  margin: "0 auto",
+  width: "fit-content",
+};

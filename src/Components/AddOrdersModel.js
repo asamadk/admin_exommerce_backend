@@ -32,6 +32,8 @@ const orderStat = [
   "Placed",
 ];
 
+const orderSource = ["Internal", "Enternal"];
+
 const saveButton = {
   marginTop: "15px",
   backgroundColor: "#673ab7",
@@ -99,6 +101,7 @@ export default function AddOrderModel(props) {
   const [orderProductList, setOrderPRoductList] = useState([]);
   const [message, setMessage] = useState("Something went wrong");
   const [modalHeader, setModalHeader] = useState(props?.source);
+  const [source,setSource] = useState('');
 
   useEffect(() => {
     setLoader(true);
@@ -201,9 +204,9 @@ export default function AddOrderModel(props) {
       razorpay_order_id: "",
       couponName: orderCoupon,
       paymentMode: payMode,
-      orderSource: "External",
+      orderSource: source,
       paid: paid.toString(),
-      productModelList : orderProductList
+      productModelList: orderProductList,
     };
 
     setLoader(true);
@@ -237,26 +240,22 @@ export default function AddOrderModel(props) {
   };
 
   const handleProductSelection = (data) => {
-    console.log('handleProductSelection data = ',data);
-    let productIdSet = new Set();
-    data.forEach((d) => {
-      productIdSet.add(parseInt(d));
-    })
-    
-    console.log('productIdSet = ',productIdSet)
-    
-    let temp = [];
-    productList.forEach(pro => {
-      if(productIdSet.has(pro.product_id)){
-        console.log('HAS TRUE')
-        temp.push(pro);
-      }
-    })
-    if(temp.length > 0){
-      setOrderPRoductList(temp);
+    console.log("handleProductSelection data = ", data);
+    if (data == null || data.length < 1) {
+      return;
     }
-    console.log('handleProductSelection temp = ',temp);
-  }
+    let temp = [];
+    data.forEach((d) => {
+      let end = parseInt(d.count);
+      for (let i = 1; i <= end; i++) {
+        temp.push(d);
+      }
+      delete d.count;
+    });
+
+    console.log("TEMP = ", temp);
+    setOrderPRoductList(temp);
+  };
 
   return (
     <Modal
@@ -375,6 +374,17 @@ export default function AddOrderModel(props) {
               label="Total price"
               value={totalPrice}
             />
+
+            <TextField
+              onChange={(e) => {
+                setSource(e.target.value);
+              }}
+              sx={inputStyle2}
+              id="outlined-basic"
+              variant="outlined"
+              label="Source User"
+              value={source}
+            />
           </Box>
           <Box sx={boxContainer}>
             <Typography>Coupon</Typography>
@@ -393,7 +403,10 @@ export default function AddOrderModel(props) {
             </Select>
           </Box>
           <Box sx={boxContainer}>
-            <ImageSelectComponent parentCallback={(data) => handleProductSelection(data)}  products={productList} />
+            <ImageSelectComponent
+              parentCallback={(data) => handleProductSelection(data)}
+              products={productList}
+            />
           </Box>
         </Box>
         <Button

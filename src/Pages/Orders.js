@@ -6,7 +6,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Chip from "@mui/material/Chip";
-import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -18,11 +17,10 @@ import axios from "axios";
 import AddOrderModel from "../Components/AddOrdersModel";
 import { Box } from "@mui/system";
 import AlifAlert from "../Components/Alert";
-import CircularProgress from '@mui/material/CircularProgress';
 import AlifCircularLoader from "../Components/AlifCircularProgress";
 import ViewOrderModel from "../Components/ViewOrderModel";
 import OrderBill from "../Components/OrderBill";
-
+// import easyinvoice from "easyinvoice";
 
 const column = [
   "Id",
@@ -49,6 +47,7 @@ export default function Orders() {
   const [loader, setLoader] = useState(false)
   const [reducerVavlue, forceUpdate] = useReducer(x => x + 1, 0)
   const [viewOrderOpen, setViewOrderOpen] = useState(false)
+  const [openBillGenerator,setOpenBillGenerator] = useState(false);
 
 
   const history = useHistory()
@@ -153,6 +152,13 @@ export default function Orders() {
     setViewOrderOpen(false)
   }
 
+  const handleGenerateBill = (singleOrder) => {
+    let orderId = Math.random();
+    history.push(`/order/${orderId}`,{
+      data : singleOrder
+    })
+  }
+
   return (
     <>
       <AlifCircularLoader open={loader} />
@@ -214,7 +220,7 @@ export default function Orders() {
                     <MenuItem id={order?.orderId} onClick={viewOrderDetails}>View</MenuItem>
                     <MenuItem id={order?.orderId} onClick={editOrderDtetails}>Edit</MenuItem>
                     <MenuItem id={order?.orderId} onClick={deletingOrders}>Delete</MenuItem>
-                    <MenuItem id={order?.orderId} onClick={handleClose}>Generate Bill</MenuItem>
+                    <MenuItem id={order?.orderId} onClick={() => handleGenerateBill(order)}>Generate Bill</MenuItem>
                   </Menu>
                 </TableCell>
               </TableRow>
@@ -225,7 +231,6 @@ export default function Orders() {
       <Box sx={{ marginTop: '50px' }}>
         {openOrder && <AddOrderModel source={Constants.EDIT} order={singleOrder} parentCallback={handleOrderModalClose} />}
         {viewOrderOpen && <ViewOrderModel source={Constants.VIEW} order={singleOrder} parentCallback={handleOrderModalClose} />}
-        {true && <OrderBill/>}
       </Box>
     </>
   );
